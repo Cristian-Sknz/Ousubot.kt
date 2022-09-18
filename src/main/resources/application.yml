@@ -1,0 +1,4 @@
+application:
+  discord:
+    token: YOUR-TOKEN
+    shards: 2
