@@ -36,12 +36,11 @@ import kotlin.reflect.full.isSubclassOf
  * @param context Contexto da aplicação Spring Boot
  * @see SlashCommands
  */
-class SlashCommands(
+internal class SlashCommands(
     private val context: ApplicationContext,
 ) {
     private val map: HashMap<String, LinkedSlashCommand> = hashMapOf()
     private val logger = LogManager.getLogger(this::class.java)
-
 
     @SubscribeEvent
     fun slashCommand(event: SlashCommandInteractionEvent) {

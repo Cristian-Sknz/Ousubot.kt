@@ -1,7 +1,9 @@
 package me.sknz.ousubot.core
 
 import me.sknz.ousubot.core.annotations.commands.SlashCommandController
+import me.sknz.ousubot.core.annotations.modal.ModalController
 import me.sknz.ousubot.core.commands.SlashCommands
+import me.sknz.ousubot.core.modal.ModalInteractions
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
@@ -47,19 +49,27 @@ class JDAConfiguration {
     }
 
     @Bean
-    fun start(context: ApplicationContext, builder: DefaultShardManagerBuilder): ShardManager? {
+    fun start(context: ApplicationContext, builder: DefaultShardManagerBuilder): ShardManager {
         val commands = context.getBeansWithAnnotation(SlashCommandController::class.java)
+        val modals = context.getBeansWithAnnotation(ModalController::class.java)
 
-        val listener = SlashCommands(context)
-        builder.addEventListeners(listener)
+        val slashCommands = SlashCommands(context)
+        val modalInteractions = ModalInteractions()
+        builder.addEventListeners(slashCommands)
+        builder.addEventListeners(modalInteractions)
+
+        for ((_, value) in modals) {
+            modalInteractions.register(value)
+        }
+
         for ((_, value) in commands) {
-            listener.register(value)
+            slashCommands.register(value)
         }
 
         val shardManager = builder.build()
 
         for (shard in shardManager.shards) {
-            listener.update(shard)
+            slashCommands.update(shard)
         }
 
         return shardManager
