@@ -2,3 +2,12 @@ application:
   discord:
     token: YOUR-TOKEN
     shards: 2
+
+spring:
+  datasource:
+    url: jdbc:h2:file:/data/db
+    username: ousubot
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect

@@ -1,4 +1,4 @@
-package me.sknz.ousubot.core.annotations
+package me.sknz.ousubot.core.annotations.commands
 
 import org.springframework.stereotype.Component
 import java.lang.annotation.Inherited

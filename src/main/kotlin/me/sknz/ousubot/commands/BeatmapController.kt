@@ -1,10 +1,10 @@
 package me.sknz.ousubot.commands
 
 import me.sknz.ousubot.api.OsuClientAPI
-import me.sknz.ousubot.core.annotations.SlashCommand
-import me.sknz.ousubot.core.annotations.SlashCommandController
-import me.sknz.ousubot.core.annotations.SlashCommandOption
-import me.sknz.ousubot.core.annotations.SlashCommandOptions
+import me.sknz.ousubot.core.annotations.commands.SlashCommand
+import me.sknz.ousubot.core.annotations.commands.SlashCommandController
+import me.sknz.ousubot.core.annotations.commands.SlashCommandOption
+import me.sknz.ousubot.core.annotations.commands.SlashCommandOptions
 import me.sknz.ousubot.core.context.SlashCommandContext
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.requests.RestAction

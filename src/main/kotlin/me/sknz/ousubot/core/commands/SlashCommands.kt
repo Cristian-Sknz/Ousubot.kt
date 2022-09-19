@@ -1,9 +1,9 @@
 package me.sknz.ousubot.core.commands
 
-import me.sknz.ousubot.core.annotations.SlashCommand
-import me.sknz.ousubot.core.annotations.SlashCommandController
-import me.sknz.ousubot.core.annotations.SlashCommandOption
-import me.sknz.ousubot.core.annotations.SlashCommandOptions
+import me.sknz.ousubot.core.annotations.commands.SlashCommand
+import me.sknz.ousubot.core.annotations.commands.SlashCommandController
+import me.sknz.ousubot.core.annotations.commands.SlashCommandOption
+import me.sknz.ousubot.core.annotations.commands.SlashCommandOptions
 import me.sknz.ousubot.core.commands.autocomplete.CommandAutoComplete
 import me.sknz.ousubot.core.commands.autocomplete.NumberAutoComplete
 import me.sknz.ousubot.core.commands.autocomplete.StringAutoComplete

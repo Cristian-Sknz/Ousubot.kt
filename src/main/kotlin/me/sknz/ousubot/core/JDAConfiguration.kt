@@ -1,6 +1,6 @@
 package me.sknz.ousubot.core
 
-import me.sknz.ousubot.core.annotations.SlashCommandController
+import me.sknz.ousubot.core.annotations.commands.SlashCommandController
 import me.sknz.ousubot.core.commands.SlashCommands
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager
 import net.dv8tion.jda.api.requests.GatewayIntent

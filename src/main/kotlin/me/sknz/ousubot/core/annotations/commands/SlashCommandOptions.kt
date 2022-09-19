@@ -1,4 +1,4 @@
-package me.sknz.ousubot.core.annotations
+package me.sknz.ousubot.core.annotations.commands
 
 /**
  * Anotação utilizada para especificar opções de um comando ou subcomando

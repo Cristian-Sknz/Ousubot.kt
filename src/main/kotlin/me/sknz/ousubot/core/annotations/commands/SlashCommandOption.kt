@@ -1,4 +1,4 @@
-package me.sknz.ousubot.core.annotations
+package me.sknz.ousubot.core.annotations.commands
 
 import me.sknz.ousubot.core.commands.autocomplete.CommandAutoComplete
 import net.dv8tion.jda.api.interactions.commands.OptionType
