@@ -1,5 +1,6 @@
 package me.sknz.ousubot.core
 
+import me.sknz.ousubot.api.OsuTokenScheduler
 import me.sknz.ousubot.core.annotations.commands.SlashCommandController
 import me.sknz.ousubot.core.annotations.modal.ModalController
 import me.sknz.ousubot.core.commands.SlashCommands
@@ -52,6 +53,7 @@ class JDAConfiguration {
     fun start(context: ApplicationContext, builder: DefaultShardManagerBuilder): ShardManager {
         val commands = context.getBeansWithAnnotation(SlashCommandController::class.java)
         val modals = context.getBeansWithAnnotation(ModalController::class.java)
+        val tokenScheduler = context.getBean(OsuTokenScheduler::class.java)
 
         val slashCommands = SlashCommands(context)
         val modalInteractions = ModalInteractions()
@@ -65,7 +67,7 @@ class JDAConfiguration {
         for ((_, value) in commands) {
             slashCommands.register(value)
         }
-
+        tokenScheduler.schedule()
         val shardManager = builder.build()
 
         for (shard in shardManager.shards) {
