@@ -1,26 +1,41 @@
 package me.sknz.ousubot.api.models
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 
-data class Beatmap(
-    val accuracy: Float = 0F,
-    val ar: Float = 0F,
-    val beatmapset_id: Int = 0,
-    val bpm: Float = 0F,
-    val convert: Boolean = false,
-    val count_circles: Int = 0,
-    val count_sliders: Int = 0,
-    val count_spinners: Int = 0,
-    val cs: Float = 0F,
-    val deleted_at: OffsetDateTime? = null,
-    val drain: Float = 0F,
-    val hit_length: Int = 0,
-    val is_scoreable: Boolean = false,
-    val last_updated: OffsetDateTime? = null,
-    val mode_int: Int = 0,
-    val passcount: Int = 0,
-    val playcount: Int = 0,
-    val ranked: Int = 0,
+class Beatmap : BeatmapCompact() {
+    val accuracy: Float = 0F
+    val ar: Float = 0F
+    val bpm: Float? = null
+    val convert: Boolean = false
+    val cs: Float = 0F
+    val drain: Float = 0F
+    val ranked: Int = 0
     val url: String = ""
-) {
+
+    @JsonProperty("is_scoreable")
+    val scoreable: Boolean = false
+
+    @JsonProperty("last_updated")
+    val lastUpdated: OffsetDateTime = OffsetDateTime.now()
+
+    @JsonProperty("mode_int")
+    val modeInt: Int = 0
+
+    @JsonProperty("passcount")
+    val passCount: Int = 0
+
+    @JsonProperty("playcount")
+    val playCount: Int = 0
+
+    @JsonProperty("count_circles")
+    val countCircles: Int = 0
+    @JsonProperty("count_sliders")
+    val countSliders: Int = 0
+    @JsonProperty("count_spinners")
+    val countSpinners: Int = 0
+    @JsonProperty("deleted_at")
+    val deletedAt: OffsetDateTime? = null
+    @JsonProperty("hit_length")
+    val hitLength: Int = 0
 }
