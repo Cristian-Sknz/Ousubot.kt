@@ -1,3 +1,5 @@
 build
 .gradle
 .idea
+data
+application-development.yml

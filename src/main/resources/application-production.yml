@@ -1,0 +1,21 @@
+application:
+  discord:
+    token:
+    shards:
+    ownerId:
+  osu:
+    oauth:
+      client-id:
+      client-secret:
+      redirect-uri:
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/database.db
+    username: ousubot
+    password: password
+    driverClassName: org.h2.Driver
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  profiles: production
