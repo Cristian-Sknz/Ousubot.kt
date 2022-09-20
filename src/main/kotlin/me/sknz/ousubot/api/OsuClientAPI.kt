@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod
 @FeignClient(name="osu", url = "https://osu.ppy.sh/api/v2")
 interface OsuClientAPI {
 
-    @RequestMapping(method = [RequestMethod.GET], value= [" /beatmaps/{id}"])
-    fun getBeatmap(@PathVariable("id") id: Int): ArrayList<Beatmap>
+    @RequestMapping(method = [RequestMethod.GET], value= ["/beatmaps/{id}"])
+    fun getBeatmap(@PathVariable("id") id: Int): Beatmap
 }
