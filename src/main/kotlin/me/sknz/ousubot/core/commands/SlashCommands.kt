@@ -8,6 +8,7 @@ import me.sknz.ousubot.core.commands.autocomplete.CommandAutoComplete
 import me.sknz.ousubot.core.commands.autocomplete.NumberAutoComplete
 import me.sknz.ousubot.core.commands.autocomplete.StringAutoComplete
 import me.sknz.ousubot.core.commands.exception.CommandRegisterException
+import me.sknz.ousubot.core.commands.tools.CommandParameterInjector
 import me.sknz.ousubot.core.context.SlashCommandContext
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
@@ -41,6 +42,7 @@ internal class SlashCommands(
 ) {
     private val map: HashMap<String, LinkedSlashCommand> = hashMapOf()
     private val logger = LogManager.getLogger(this::class.java)
+    private val injector = CommandParameterInjector(context)
 
     @SubscribeEvent
     fun slashCommand(event: SlashCommandInteractionEvent) {
@@ -53,8 +55,10 @@ internal class SlashCommands(
         }
 
         val value = this.map[event.name.lowercase()]!!
-        value.execute(event.subcommandName).let {
-            if (it is RestAction<*>) it.queue()
+        value.getFunction(event.subcommandName)?.let {
+            val params = injector.getInitializedParameters(event, it)
+            val callback = it.call(value.instance, *params.toTypedArray())
+            if (callback is RestAction<*>) callback.queue()
         }
     }
 

@@ -8,15 +8,15 @@ import kotlin.reflect.KFunction
 /**
  * LinkedSlashCommand é uma classe para armazenar comandos e subcomandos.
  * Apos um comando ser registrado com sucesso ele é transformado nessa classe
- * e poderá ser executado ao chamar o método [LinkedSlashCommand.execute]
+ * e poderá ser executado ao chamar o método [LinkedSlashCommand.getFunction]
  *
  * @see SlashCommands
  */
 data class LinkedSlashCommand(
-    private val instance: Any,
+    val instance: Any,
     val command: Any,
-    private val subcommands: Collection<LinkedSlashCommand>?,
-    private val function: KFunction<*>?,
+    val subcommands: Collection<LinkedSlashCommand>?,
+    val function: KFunction<*>?,
     val options: Collection<LinkedOption>?
 ) {
 
@@ -26,8 +26,8 @@ data class LinkedSlashCommand(
         }
     }
 
-    fun execute(name: String?, vararg args: Any?): Any? {
-        return getLinkedSlashCommand(name)?.function?.call(instance, *args)
+    fun getFunction(name: String?): KFunction<*>? {
+        return getLinkedSlashCommand(name)?.function
     }
 
     fun getLinkedSlashCommand(name: String?): LinkedSlashCommand? {
