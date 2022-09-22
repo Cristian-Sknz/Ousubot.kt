@@ -1,4 +1,4 @@
-package me.sknz.ousubot.api.models
+package me.sknz.ousubot.api.models.beatmaps
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import me.sknz.ousubot.api.models.enums.GameMode
@@ -12,8 +12,8 @@ open class BeatmapCompact {
     @JsonProperty("beatmapset_id")
     val beatmapSetId: Int = 0
 
-    @JsonProperty("difficultRating")
-    val difficultRatting: Float = 0F
+    @JsonProperty("difficulty_rating")
+    val difficultyRating: Float = 0F
 
     @JsonProperty("total_length")
     val totalLength: Int = 0

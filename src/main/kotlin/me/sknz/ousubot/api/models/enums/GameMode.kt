@@ -2,13 +2,13 @@ package me.sknz.ousubot.api.models.enums
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-enum class GameMode(val mode: String) {
+enum class GameMode(val id: Int, val mode: String) {
     @JsonProperty("fruits")
-    Fruits("osu!catch"),
+    Fruits(3,"osu!catch"),
     @JsonProperty("mania")
-    Mania("osu!mania"),
+    Mania(2, "osu!mania"),
     @JsonProperty("osu")
-    Osu("osu!standard"),
+    Osu(0,"osu!standard"),
     @JsonProperty("taiko")
-    Taiko("osu!taiko");
+    Taiko(1, "osu!taiko");
 }
