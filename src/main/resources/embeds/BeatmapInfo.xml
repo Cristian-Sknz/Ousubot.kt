@@ -1,0 +1,52 @@
+<DiscordEmbed xmlns:th="http://www.thymeleaf.org">
+    <title th:inline="text">
+        <name>[[${beatmap.beatmapSet.title}]] - Beatmap</name>
+        <url>https://osu.ppy.sh/beatmapsets/[[${beatmap.beatmapSetId}]]</url>
+        <icon/>
+    </title>
+    <description th:inline="text">:microphone: Artista: [[${beatmap.beatmapSet.artist}]]
+        :standard: [[${beatmap.mode}]]
+        :tickets: [[${#strings.capitalize(beatmap.status)}]]
+    </description>
+    <thumbnail th:text="${beatmap.beatmapSet.covers.list2x}"/>
+    <image th:text="${beatmap.beatmapSet.covers.cover2x}"/>
+    <color th:text="${color}"/>
+    <fields>
+        <fields>
+            <label>Dificuldade:</label>
+            <value th:text="${beatmap.version}"/>
+            <inline>true</inline>
+        </fields>
+        <fields>
+            <label>Taxa de Sucesso:</label>
+            <value th:text="${beatmap.getSuccessRate()}"/>
+            <inline>true</inline>
+        </fields>
+        <fields>
+            <label>Combo Maximo</label>
+            <value th:text="${beatmap.maxCombo}"/>
+            <inline>true</inline>
+        </fields>
+        <fields th:inline="text">
+            <label>Data de Aprovação:</label>
+            <value>:date: [[${#temporals.format(beatmap.beatmapSet.rankedDate, 'dd/MM/yyyy')}]]</value>
+            <inline>true</inline>
+        </fields>
+        <fields th:inline="text">
+            <label>BPM</label>
+            <value>:reversearrow: [[${beatmap.bpm}]]</value>
+            <inline>true</inline>
+        </fields>
+        <fields th:inline="text">
+            <label>Estrelas:</label>
+            <value>[[${beatmap.getStars()}]] ([[${beatmap.difficultyRating}]])</value>
+            <inline>true</inline>
+        </fields>
+    </fields>
+    <author th:inline="text">
+        <name>[[${beatmap.beatmapSet.creator}]]</name>
+        <url>https://osu.ppy.sh/users/[[${beatmap.userId}]]</url>
+        <icon>https://a.ppy.sh/[[${beatmap.userId}]]</icon>
+    </author>
+    <footer/>
+</DiscordEmbed>
