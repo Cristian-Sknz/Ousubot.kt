@@ -30,10 +30,14 @@ dependencies {
     implementation("io.github.openfeign:feign-jackson:11.9.1")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
-    // Jackson DataBind JSON
+    // Jackson DataBind JSON / Serialization
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.4")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.4")
 
+    // Template Engine
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE")
 
     // Temporary Database
     runtimeOnly("com.h2database:h2")
