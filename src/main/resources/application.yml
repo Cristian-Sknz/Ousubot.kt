@@ -1,6 +1,9 @@
 spring:
   main:
     banner-mode: "off"
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
   # Spring Profiles
   # Altere isso para a configuração do ambiente que desejar
   # (application-production.yml = production)

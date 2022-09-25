@@ -1,11 +1,12 @@
 package me.sknz.ousubot.api.models.beatmaps
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.io.Serializable
 import java.text.DecimalFormat
 import java.time.OffsetDateTime
 import kotlin.math.roundToInt
 
-open class Beatmap : BeatmapCompact() {
+open class Beatmap : BeatmapCompact(), Serializable {
     val accuracy: Float = 0F
     val ar: Float = 0F
     val bpm: Float? = null
@@ -49,7 +50,7 @@ open class Beatmap : BeatmapCompact() {
     val failTimes: FailTimes? = null
     @JsonProperty("max_combo")
     val maxCombo: Int? = null
-    class FailTimes {
+    class FailTimes: Serializable {
         val fail: Array<Int> = emptyArray()
         val exit: Array<Int> = emptyArray()
     }

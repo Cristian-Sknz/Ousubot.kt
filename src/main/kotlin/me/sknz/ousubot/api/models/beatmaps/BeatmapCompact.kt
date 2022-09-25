@@ -2,8 +2,9 @@ package me.sknz.ousubot.api.models.beatmaps
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import me.sknz.ousubot.api.models.enums.GameMode
+import java.io.Serializable
 
-open class BeatmapCompact {
+open class BeatmapCompact: Serializable {
     val id: Int = 0
     val mode: GameMode = GameMode.Osu
     val status: String = ""

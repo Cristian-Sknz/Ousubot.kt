@@ -26,6 +26,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
+    // Caching
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("org.ehcache:ehcache")
+    implementation("javax.cache:cache-api")
+
     // FeignClient
     implementation("io.github.openfeign:feign-jackson:11.9.1")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")

@@ -1,8 +1,9 @@
 package me.sknz.ousubot.api.models.beatmaps
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.io.Serializable
 
-open class BeatmapSetCompact {
+open class BeatmapSetCompact: Serializable {
 
     val artist: String = ""
     @JsonProperty("artist_unicode")
@@ -39,7 +40,7 @@ open class BeatmapSetCompact {
     @JsonProperty("has_favourited")
     val favourited: Boolean? = null
 
-    class Covers {
+    class Covers : Serializable {
         val cover: String = ""
 
         @JsonProperty("cover@2x")

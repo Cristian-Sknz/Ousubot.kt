@@ -1,0 +1,23 @@
+<config
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xsi:schemaLocation="
+            http://www.ehcache.org/v3
+            http://www.ehcache.org/schema/ehcache-core-3.7.xsd">
+    <persistence directory="bot-caching/cache" />
+    <cache-template name="default">
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <resources>
+            <heap>1000</heap>
+            <offheap unit="MB">10</offheap>
+            <disk persistent="true" unit="MB">20</disk>
+        </resources>
+    </cache-template>
+
+    <cache alias="beatmaps" uses-template="default">
+        <key-type>me.sknz.ousubot.dto.BeatmapRequest</key-type>
+        <value-type>me.sknz.ousubot.dto.BeatmapDiscordEmbed</value-type>
+    </cache>
+</config>

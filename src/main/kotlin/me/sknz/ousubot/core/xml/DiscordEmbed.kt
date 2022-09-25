@@ -3,6 +3,7 @@ package me.sknz.ousubot.core.xml
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import java.awt.Color
+import java.io.Serializable
 
 /**
  * ## DiscordEmbed
@@ -13,7 +14,7 @@ import java.awt.Color
  * @see net.dv8tion.jda.api.entities.MessageEmbed
  * @see com.fasterxml.jackson.dataformat.xml.XmlMapper
  */
-data class DiscordEmbed(
+open class DiscordEmbed(
     var title: EmbedValue? = null,
     var description: String? = null,
     var thumbnail: String? = null,
@@ -22,19 +23,19 @@ data class DiscordEmbed(
     var fields: List<EmbedField> = emptyList(),
     var author: EmbedValue? = null,
     var footer: EmbedValue? = null,
-) {
+): Serializable {
 
     data class EmbedField(
         var label: String = "",
         var value: String = "",
         var inline: Boolean = false
-    )
+    ): Serializable
 
     data class EmbedValue(
         var name: String? = null,
         var url: String? = null,
         var icon: String? = null,
-    )
+    ): Serializable
 
     companion object {
         fun MessageEmbed.toDiscordEmbed(): DiscordEmbed {
@@ -67,5 +68,35 @@ data class DiscordEmbed(
                 it
             }
             .build()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as DiscordEmbed
+
+        if (title != other.title) return false
+        if (description != other.description) return false
+        if (thumbnail != other.thumbnail) return false
+        if (image != other.image) return false
+        if (color != other.color) return false
+        if (fields != other.fields) return false
+        if (author != other.author) return false
+        if (footer != other.footer) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = title?.hashCode() ?: 0
+        result = 31 * result + (description?.hashCode() ?: 0)
+        result = 31 * result + (thumbnail?.hashCode() ?: 0)
+        result = 31 * result + (image?.hashCode() ?: 0)
+        result = 31 * result + (color ?: 0)
+        result = 31 * result + fields.hashCode()
+        result = 31 * result + (author?.hashCode() ?: 0)
+        result = 31 * result + (footer?.hashCode() ?: 0)
+        return result
     }
 }

@@ -1,9 +1,10 @@
 package me.sknz.ousubot.api.models.beatmaps
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.io.Serializable
 import java.time.OffsetDateTime
 
-class BeatmapSet: BeatmapSetCompact() {
+class BeatmapSet: BeatmapSetCompact(), Serializable {
 
     val spotlight: Boolean = false
     @JsonProperty("track_id")
@@ -36,14 +37,14 @@ class BeatmapSet: BeatmapSetCompact() {
     @JsonProperty("legacy_thread_url")
     val legacyThreadUrl: String? = null
 
-    class BeatmapSetAvailability {
+    class BeatmapSetAvailability: Serializable {
         @JsonProperty("download_disabled")
         val downloadDisabled: Boolean = false
         @JsonProperty("more_information")
         val moreInformation: Any? = null
     }
 
-    class NominationsSummary {
+    class NominationsSummary: Serializable {
         val current: Int = 0
         val required: Int = 0
     }
