@@ -1,5 +1,6 @@
 package me.sknz.ousubot.spring
 
+import me.sknz.ousubot.core.xml.DiscordDialect
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
@@ -41,6 +42,7 @@ class TemplateEngineConfiguration {
         val engine = SpringTemplateEngine()
         engine.setTemplateResolver(resolver)
         engine.addDialect(Java8TimeDialect())
+        engine.addDialect(DiscordDialect())
 
         return engine
     }

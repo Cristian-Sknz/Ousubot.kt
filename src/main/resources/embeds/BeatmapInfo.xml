@@ -1,11 +1,11 @@
-<DiscordEmbed xmlns:th="http://www.thymeleaf.org">
+<DiscordEmbed xmlns:th="http://www.thymeleaf.org" xmlns:discord="http://www.thymeleaf.org">
     <title th:inline="text">
         <name>[[${beatmap.beatmapSet.title}]] - Beatmap</name>
-        <url>https://osu.ppy.sh/beatmapsets/[[${beatmap.beatmapSetId}]]</url>
+        <url th:text="${beatmap.url}"/>
         <icon/>
     </title>
     <description th:inline="text">:microphone: Artista: [[${beatmap.beatmapSet.artist}]]
-        :standard: [[${beatmap.mode}]]
+        <emoji discord:emoji="${beatmap.mode}"/> [[${beatmap.mode}]]
         :tickets: [[${#strings.capitalize(beatmap.status)}]]
     </description>
     <thumbnail th:text="${beatmap.beatmapSet.covers.list2x}"/>
@@ -34,7 +34,7 @@
         </fields>
         <fields th:inline="text">
             <label>BPM</label>
-            <value>:reversearrow: [[${beatmap.bpm}]]</value>
+            <value><emoji discord:emoji="bpm"/> [[${beatmap.bpm}]]</value>
             <inline>true</inline>
         </fields>
         <fields th:inline="text">

@@ -11,4 +11,9 @@ enum class GameMode(val id: Int, val mode: String) {
     Osu(0,"osu!standard"),
     @JsonProperty("taiko")
     Taiko(1, "osu!taiko");
+
+    override fun toString(): String {
+        return this.name
+    }
+
 }
