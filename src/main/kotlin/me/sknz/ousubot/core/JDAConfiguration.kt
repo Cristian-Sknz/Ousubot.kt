@@ -2,9 +2,11 @@ package me.sknz.ousubot.core
 
 import me.sknz.ousubot.api.OsuTokenScheduler
 import me.sknz.ousubot.core.annotations.commands.SlashCommandController
-import me.sknz.ousubot.core.annotations.modal.ModalController
+import me.sknz.ousubot.core.annotations.interaction.InteractionController
+import me.sknz.ousubot.core.annotations.interaction.InteractionType
 import me.sknz.ousubot.core.commands.SlashCommands
-import me.sknz.ousubot.core.modal.ModalInteractions
+import me.sknz.ousubot.core.interactions.impl.ButtonInterations
+import me.sknz.ousubot.core.interactions.impl.ModalInteractions
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager
 import net.dv8tion.jda.api.requests.GatewayIntent
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import kotlin.reflect.full.findAnnotation
 
 /**
  * ## Configuração do JDA
@@ -52,16 +55,19 @@ class JDAConfiguration {
     @Bean
     fun start(context: ApplicationContext, builder: DefaultShardManagerBuilder): ShardManager {
         val commands = context.getBeansWithAnnotation(SlashCommandController::class.java)
-        val modals = context.getBeansWithAnnotation(ModalController::class.java)
+        val interactions = context.getBeansWithAnnotation(InteractionController::class.java)
         val tokenScheduler = context.getBean(OsuTokenScheduler::class.java)
 
-        val slashCommands = SlashCommands(context)
-        val modalInteractions = ModalInteractions()
-        builder.addEventListeners(slashCommands)
-        builder.addEventListeners(modalInteractions)
+        val slashCommands = builder.addListener(SlashCommands(context))
+        val modalInteractions = builder.addListener(ModalInteractions())
+        val buttonInteractions = builder.addListener(ButtonInterations())
 
-        for ((_, value) in modals) {
+        for ((_, value) in interactions.byType(InteractionType.MODAL)) {
             modalInteractions.register(value)
+        }
+
+        for ((_, value) in interactions.byType(InteractionType.BUTTON)) {
+            buttonInteractions.register(value)
         }
 
         for ((_, value) in commands) {
@@ -75,5 +81,14 @@ class JDAConfiguration {
         }
 
         return shardManager
+    }
+
+    private fun Map<String, Any>.byType(type: InteractionType): Map<String, Any> {
+        return this.filter { it.value::class.findAnnotation<InteractionController>()!!.type == type}
+    }
+
+    private fun <T> DefaultShardManagerBuilder.addListener(any: T): T {
+        this.addEventListeners(any)
+        return any
     }
 }

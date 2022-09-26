@@ -1,4 +1,4 @@
-package me.sknz.ousubot.core.modal
+package me.sknz.ousubot.core.interactions
 
 enum class IDType {
     EQUALS,
