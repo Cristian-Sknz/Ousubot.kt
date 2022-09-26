@@ -33,8 +33,8 @@ open class BeatmapSetCompact: Serializable {
     val video: Boolean = false
 
     // Optional fields
-    val beatmaps: List<Beatmap>? = null
-    val description: String? = null
+    var beatmaps: List<Beatmap>? = null
+    val description: Any? = null
     val ratings: Array<Int>? = null
     val offset: Int = 0
     @JsonProperty("has_favourited")

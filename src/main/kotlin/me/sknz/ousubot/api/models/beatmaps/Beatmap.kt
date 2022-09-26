@@ -17,7 +17,7 @@ open class Beatmap : BeatmapCompact(), Serializable {
     val url: String = ""
 
     @JsonProperty("beatmapset")
-    val beatmapSet: BeatmapSet? = null
+    var beatmapSet: BeatmapSet? = null
 
     @JsonProperty("is_scoreable")
     val scoreable: Boolean = false

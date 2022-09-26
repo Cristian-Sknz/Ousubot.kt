@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.io.Serializable
 import java.time.OffsetDateTime
 
-class BeatmapSet: BeatmapSetCompact(), Serializable {
+class BeatmapSet: BeatmapSetCompact(), Serializable, Cloneable {
 
     val spotlight: Boolean = false
     @JsonProperty("track_id")
@@ -47,5 +47,20 @@ class BeatmapSet: BeatmapSetCompact(), Serializable {
     class NominationsSummary: Serializable {
         val current: Int = 0
         val required: Int = 0
+    }
+
+    fun getBeatmapSetUrl(): String {
+        return "https://osu.ppy.sh/beatmapsets/$id"
+    }
+
+    public override fun clone(): Any {
+        return super.clone()
+    }
+
+    fun cloneWithoutBeatmaps(): BeatmapSet {
+        return (super.clone() as BeatmapSet).let {
+            it.beatmaps = null
+            return@let it
+        }
     }
 }

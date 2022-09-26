@@ -20,4 +20,8 @@
         <key-type>me.sknz.ousubot.dto.BeatmapRequest</key-type>
         <value-type>me.sknz.ousubot.dto.BeatmapDiscordEmbed</value-type>
     </cache>
+    <cache alias="beatmapSets" uses-template="default">
+        <key-type>java.lang.Integer</key-type>
+        <value-type>me.sknz.ousubot.api.models.beatmaps.BeatmapSet</value-type>
+    </cache>
 </config>
