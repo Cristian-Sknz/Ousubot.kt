@@ -91,7 +91,7 @@ class BeatmapService(
      * @see BeatmapService.getBeatmapEmbed
      *
      * @param beatmapSetId Id do BeatmapSet
-     * @param locale Locale utilizado para intercionalização (i18n)
+     * @param locale Locale utilizado para internacionalização (i18n)
      * @param beatmapId devolver um BeatmapId especifico
      */
     fun getBeatmapSetEmbed(beatmapSetId: Int, locale: DiscordLocale, beatmapId: Int? = null): BeatmapSetDiscordEmbed {
