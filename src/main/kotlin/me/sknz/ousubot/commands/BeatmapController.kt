@@ -56,13 +56,13 @@ class BeatmapController(
             val complete = interaction.deferReply().complete()
             val embed = service.getBeatmapSetEmbed(name.asString.toInt(), interaction.userLocale)
 
-            val back = Button.primary("backbtn-${embed.beatmap.beatmapSetId}-${embed.back}", "Back")
+            val back = Button.primary("beatmapset:change:${embed.beatmap.beatmapSetId}-${embed.back}", "Back")
                 .withDisabled(!embed.hasBack())
                 .withEmoji(Emoji.fromUnicode("U+2B05"))
 
             val download = Button.link(embed.beatmap.url, "Download")
 
-            val next = Button.primary("nextbtn-${embed.beatmap.beatmapSetId}-${embed.next}", "Next")
+            val next = Button.primary("beatmapset:change:${embed.beatmap.beatmapSetId}-${embed.next}", "Next")
                 .withDisabled(!embed.hasNext())
                 .withEmoji(Emoji.fromUnicode("U+27A1"))
 
