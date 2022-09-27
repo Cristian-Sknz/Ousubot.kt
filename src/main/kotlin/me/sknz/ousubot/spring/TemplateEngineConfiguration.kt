@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect
 import org.thymeleaf.spring5.SpringTemplateEngine
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver
@@ -49,6 +50,10 @@ class TemplateEngineConfiguration {
         engine.setTemplateResolver(resolver)
         engine.addDialect(Java8TimeDialect())
         engine.addDialect(DiscordDialect(customEmojis()))
+
+        val messageSource = ReloadableResourceBundleMessageSource()
+        messageSource.setBasename("classpath:i18n/discord")
+        engine.setTemplateEngineMessageSource(messageSource)
 
         return engine
     }

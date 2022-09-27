@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.SpringTemplateEngine
+import java.util.Locale
 import java.util.stream.Collectors
 
 @Service
@@ -59,7 +60,7 @@ class SearchServiceImpl(
         for ((index, beatmapSet) in beatmapSets.withIndex()) {
             if (beatmapSet.id == query.beatmapSet) {
                 val beatmap = beatmapSet.beatmaps!![0]
-                val embed = self.process(beatmapSet)
+                val embed = self.process(beatmapSet, query.locale)
                 beatmapSet.beatmaps!![0].beatmapSet = beatmapSet.cloneWithoutBeatmaps()
 
                 return DiscordBeatmapEmbed(embed, beatmapSets.getOrNull(index + 1)?.id, beatmapSets.getOrNull(index - 1)?.id, beatmap)
@@ -76,7 +77,7 @@ class SearchServiceImpl(
      * @param beatmapSet [BeatmapSet] que será gerado em forma de [DiscordEmbed]
      * @see DiscordEmbed
      */
-    fun process(beatmapSet: BeatmapSet): DiscordEmbed {
+    fun process(beatmapSet: BeatmapSet, locale: Locale): DiscordEmbed {
         val beatmaps = beatmapSet.beatmaps!!
         val versions = beatmaps.stream()
             .map { "${emojis.getEmoji(it.mode.name)?.asMention} ${it.version} (${it.difficultyRating})" }
@@ -90,6 +91,8 @@ class SearchServiceImpl(
             .addVariable("beatmapSet", beatmapSet)
             .addVariable("versions", versions)
             .addVariable("modes", beatmaps.map { it.mode.name }.distinct())
+
+        ctx.locale = locale
 
         val xml = engine.process("SearchEmbed", ctx)
 

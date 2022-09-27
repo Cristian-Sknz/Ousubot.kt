@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.SpringTemplateEngine
+import java.util.*
 
 @Service
 class BeatmapServiceImpl(
@@ -56,7 +57,7 @@ class BeatmapServiceImpl(
         for ((index, beatmap) in beatmaps.withIndex()) {
             if (beatmap.id == request.beatmap) {
                 beatmap.beatmapSet = beatmapSet.cloneWithoutBeatmaps()
-                val embed = process(beatmap)
+                val embed = process(beatmap, request.locale)
                 return DiscordBeatmapEmbed(embed, beatmaps.getOrNull(index + 1)?.id, beatmaps.getOrNull(index - 1)?.id, beatmap)
             }
         }
@@ -94,7 +95,7 @@ class BeatmapServiceImpl(
      * @param beatmap [Beatmap] que será gerado em forma de [DiscordEmbed]
      * @see DiscordEmbed
      */
-    fun process(beatmap: Beatmap): DiscordEmbed {
+    fun process(beatmap: Beatmap, locale: Locale): DiscordEmbed {
         val ctx = Context()
             .addVariable("beatmap", beatmap)
             .addVariable("color", ColorThief.getPredominatColor(beatmap.beatmapSet!!.covers.card, true).rgb)
