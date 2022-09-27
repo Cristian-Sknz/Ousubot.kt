@@ -1,21 +1,21 @@
 <DiscordEmbed xmlns:th="http://www.thymeleaf.org" xmlns:discord="http://www.thymeleaf.org">
     <title th:inline="text">
-        <name>[[${beatmapSet.title}]] | Search Beatmaps</name>
+        <name>[[${beatmapSet.title}]] | [[#{beatmap.search}]]</name>
         <url th:text="${beatmapSet.getBeatmapSetUrl()}"/>
         <icon/>
     </title>
-    <description th:inline="text">:microphone: Artista: [[${beatmapSet.artist}]]
-        :compass: Modos de Jogo: <emoji th:each="mode : ${modes}" discord:emoji="${mode}"/>
+    <description th:inline="text">:microphone: [[#{beatmap.artist}]]: [[${beatmapSet.artist}]]
+        :compass: [[#{beatmap.gamemodes}]]: <emoji th:each="mode : ${modes}" discord:emoji="${mode}"/>
         :tickets: [[${#strings.capitalize(beatmapSet.status)}]]
     </description>
     <thumbnail>https://cdn.discordapp.com/emojis/770368513726087179.png</thumbnail>
     <image th:text="${beatmapSet.covers.cover2x}"/>
     <color>233125105</color>
     <fields>
-        <fields>
-            <label>Dificuldade:</label>
+        <fields th:inline="text">
+            <label>[[#{beatmap.versions}]]:</label>
             <value>
-                <map th:each="version : ${versions}" th:inline="text" th:remove="tag">[[${version}]]</map>
+                <map th:each="version : ${versions}" th:remove="tag">[[${version}]]</map>
             </value>
             <inline>true</inline>
         </fields>

@@ -4,31 +4,31 @@
         <url th:text="${beatmap.url}"/>
         <icon/>
     </title>
-    <description th:inline="text">:microphone: Artista: [[${beatmap.beatmapSet.artist}]]
-        <emoji discord:emoji="${beatmap.mode}"/> [[${beatmap.mode}]]
+    <description th:inline="text">:microphone: [[#{beatmap.artist}]]: [[${beatmap.beatmapSet.artist}]]
+        <emoji discord:emoji="${beatmap.mode}"/> [[#{beatmap.gamemode}]]: [[${beatmap.mode}]]
         :tickets: [[${#strings.capitalize(beatmap.status)}]]
     </description>
     <thumbnail th:text="${beatmap.beatmapSet.covers.list2x}"/>
     <image th:text="${beatmap.beatmapSet.covers.cover2x}"/>
     <color th:text="${color}"/>
-    <fields>
+    <fields th:inline="text">
         <fields>
-            <label>Dificuldade:</label>
-            <value th:text="${beatmap.version}"/>
+            <label>[[#{beatmap.version}]]</label>
+            <value>[[${beatmap.version}]]</value>
             <inline>true</inline>
         </fields>
         <fields>
-            <label>Taxa de Sucesso:</label>
-            <value th:text="${beatmap.getSuccessRate()}"/>
+            <label>[[#{beatmap.successrate}]]</label>
+            <value>[[${beatmap.getSuccessRate()}]]</value>
             <inline>true</inline>
         </fields>
         <fields>
-            <label>Combo Maximo</label>
-            <value th:text="${beatmap.maxCombo}"/>
+            <label>[[#{beatmap.maxcombo}]]</label>
+            <value>[[${beatmap.maxCombo}]]</value>
             <inline>true</inline>
         </fields>
-        <fields th:inline="text">
-            <label>Data de Aprovação:</label>
+        <fields>
+            <label>[[#{beatmap.rankeddate}]]</label>
             <value>:date: [[${#temporals.format(beatmap.beatmapSet.rankedDate, 'dd/MM/yyyy')}]]</value>
             <inline>true</inline>
         </fields>
@@ -38,7 +38,7 @@
             <inline>true</inline>
         </fields>
         <fields th:inline="text">
-            <label>Estrelas:</label>
+            <label>[[#{beatmap.stars}]]</label>
             <value>[[${beatmap.getStars()}]] ([[${beatmap.difficultyRating}]])</value>
             <inline>true</inline>
         </fields>

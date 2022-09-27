@@ -100,6 +100,8 @@ class BeatmapServiceImpl(
             .addVariable("beatmap", beatmap)
             .addVariable("color", ColorThief.getPredominatColor(beatmap.beatmapSet!!.covers.card, true).rgb)
 
+        ctx.locale = locale
+
         val xml = engine.process("BeatmapInfo", ctx)
 
         val mapper = XmlMapper()
