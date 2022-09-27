@@ -3,3 +3,4 @@ build
 .idea
 data
 application-development.yml
+bot-caching
