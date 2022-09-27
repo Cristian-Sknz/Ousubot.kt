@@ -1,9 +1,6 @@
 package me.sknz.ousubot.core.xml.processor
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import net.dv8tion.jda.api.entities.emoji.CustomEmoji
-import net.dv8tion.jda.api.entities.emoji.Emoji
-import org.springframework.core.io.ClassPathResource
+import me.sknz.ousubot.core.context.CustomEmojis
 import org.thymeleaf.IEngineConfiguration
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.engine.AttributeName
@@ -15,7 +12,10 @@ import org.thymeleaf.standard.expression.IStandardExpressionParser
 import org.thymeleaf.standard.expression.StandardExpressions
 import org.thymeleaf.templatemode.TemplateMode
 
-class EmojiProcessor(prefix: String) : AbstractAttributeTagProcessor(
+class EmojiProcessor(
+    prefix: String,
+    private val emojis: CustomEmojis
+) : AbstractAttributeTagProcessor(
     TemplateMode.XML,
     prefix,
     null,
@@ -25,19 +25,6 @@ class EmojiProcessor(prefix: String) : AbstractAttributeTagProcessor(
     1000,
     true
 ) {
-
-    private val emoji: ArrayList<CustomEmoji> = arrayListOf()
-
-    init {
-        val path = ClassPathResource("assets/emoji.json", this.javaClass.classLoader)
-        if (path.exists()) {
-            val json = ObjectMapper().readTree(path.inputStream)
-            for (node in json) {
-                emoji.add(Emoji.fromCustom(node.get("name").asText(), node.get("id").asLong(), false))
-            }
-        }
-    }
-
     override fun doProcess(
         context: ITemplateContext,
         tag: IProcessableElementTag,
@@ -46,10 +33,10 @@ class EmojiProcessor(prefix: String) : AbstractAttributeTagProcessor(
         structureHandler: IElementTagStructureHandler
     ) {
         val value = getEmoteName(context, attributeValue)
-        val emoji = value?.let { name ->
-            emoji.find { it.name.equals(name, true) }
+        val emoji = value?.let {
+            emojis.getXMLEmoji(it)
         }
-        val text = context.modelFactory.createText(emoji?.asXMLString() ?: "emote not found")
+        val text = context.modelFactory.createText(emoji ?: "emote not found")
         structureHandler.replaceWith(text, false)
     }
 
@@ -71,6 +58,4 @@ class EmojiProcessor(prefix: String) : AbstractAttributeTagProcessor(
         }
         return null
     }
-
-    private fun CustomEmoji.asXMLString() = "&lt;:${this.name}:${this.id}&gt;"
 }

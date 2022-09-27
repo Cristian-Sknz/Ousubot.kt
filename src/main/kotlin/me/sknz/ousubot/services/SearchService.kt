@@ -1,18 +1,20 @@
 package me.sknz.ousubot.services
 
-import me.sknz.ousubot.dto.BeatmapSetRequest
+import me.sknz.ousubot.dto.BeatmapSearchRequest
 import me.sknz.ousubot.dto.DiscordBeatmapEmbed
 import org.springframework.cache.annotation.Cacheable
 
+
 /**
- * ## BeatmapService
+ * ## SearchService
  *
  * Classe responsável pelas regras de negócio envolvendo requisições
- * de SlashCommands para a API de beatmap do Osu!
+ * de SlashCommands para a API de busca do Osu!
  *
  * @see me.sknz.ousubot.commands.BeatmapController
  */
-interface BeatmapService<T> {
+interface SearchService<T> {
+
 
     /**
      * Pegar a instância desta classe como proxy.
@@ -29,7 +31,7 @@ interface BeatmapService<T> {
      * para otimizar o processamento de uma requisição e evitar
      * requisições desnecessárias na API do Osu
      *
-     * @param request Uma requisição de beatmap ou beatmapSet
+     * @param request Uma requisição de pesquisa
      */
-    fun getBeatmapEmbed(request: BeatmapSetRequest): DiscordBeatmapEmbed
+    fun getSearchEmbed(request: BeatmapSearchRequest): DiscordBeatmapEmbed
 }

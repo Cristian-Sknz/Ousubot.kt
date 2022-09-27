@@ -15,13 +15,26 @@
             <disk persistent="true" unit="MB">20</disk>
         </resources>
     </cache-template>
-
-    <cache alias="beatmaps" uses-template="default">
-        <key-type>me.sknz.ousubot.dto.BeatmapRequest</key-type>
-        <value-type>me.sknz.ousubot.dto.BeatmapDiscordEmbed</value-type>
-    </cache>
-    <cache alias="beatmapSets" uses-template="default">
+    <cache alias="api:beatmapsets" uses-template="default">
         <key-type>java.lang.Integer</key-type>
         <value-type>me.sknz.ousubot.api.models.beatmaps.BeatmapSet</value-type>
+    </cache>
+
+    <cache alias="api:lockup" uses-template="default">
+        <key-type>java.lang.Integer</key-type>
+        <value-type>me.sknz.ousubot.api.models.beatmaps.BeatmapSet</value-type>
+    </cache>
+
+    <cache alias="api:searchmaps" uses-template="default">
+        <key-type>java.lang.String</key-type>
+        <value-type>me.sknz.ousubot.api.models.beatmaps.BeatmapSearch</value-type>
+    </cache>
+    <cache alias="embed:searchmaps" uses-template="default">
+        <key-type>me.sknz.ousubot.dto.BeatmapSearchRequest</key-type>
+        <value-type>me.sknz.ousubot.dto.DiscordBeatmapEmbed</value-type>
+    </cache>
+    <cache alias="embed:beatmapsets" uses-template="default">
+        <key-type>me.sknz.ousubot.dto.BeatmapSetRequest</key-type>
+        <value-type>me.sknz.ousubot.dto.DiscordBeatmapEmbed</value-type>
     </cache>
 </config>

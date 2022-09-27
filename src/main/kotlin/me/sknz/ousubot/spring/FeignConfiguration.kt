@@ -2,6 +2,7 @@ package me.sknz.ousubot.spring
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import feign.Logger
 import feign.RequestInterceptor
 import feign.codec.Decoder
 import feign.jackson.JacksonDecoder
@@ -12,6 +13,11 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class FeignConfiguration {
+
+    @Bean
+    fun feignLoggerLevel(): Logger.Level {
+        return Logger.Level.BASIC
+    }
 
     @Bean
     fun feignDecoder(objectMapper: ObjectMapper): Decoder {

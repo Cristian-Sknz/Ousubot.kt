@@ -1,15 +1,22 @@
 package me.sknz.ousubot.commands
 
 import me.sknz.ousubot.api.annotations.WorkInProgress
-import me.sknz.ousubot.api.models.beatmaps.Beatmap
 import me.sknz.ousubot.core.annotations.commands.*
-import me.sknz.ousubot.dto.BeatmapRequest
+import me.sknz.ousubot.dto.BeatmapSearchRequest
+import me.sknz.ousubot.dto.BeatmapSetRequest
+import me.sknz.ousubot.dto.DiscordBeatmapEmbed
+import me.sknz.ousubot.interactions.BeatmapSetButtonController.Companion.BEATMAPSET_CHANGE
+import me.sknz.ousubot.interactions.SearchButtonController.Companion.SEARCH_CHANGE
 import me.sknz.ousubot.services.BeatmapService
+import me.sknz.ousubot.services.SearchService
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.emoji.Emoji
+import net.dv8tion.jda.api.interactions.InteractionHook
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction
 import net.dv8tion.jda.api.interactions.components.buttons.Button
 import net.dv8tion.jda.api.requests.RestAction
+import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateRequest
 import java.net.URL
@@ -17,7 +24,8 @@ import java.net.URL
 @SlashCommandController
 @WorkInProgress
 class BeatmapController(
-    private var service: BeatmapService
+    private var beatmapService: BeatmapService<*>,
+    private var searchService: SearchService<*>
 ) {
 
     @SlashCommand(name = "beatmap", description = "Get a beatmap")
@@ -32,12 +40,10 @@ class BeatmapController(
     ): RestAction<*> {
         if (name?.asString?.toLongOrNull() != null) {
             val complete = interaction.deferReply(false).complete()
-            val embed = service.getBeatmapEmbed(BeatmapRequest(name.asInt, interaction.userLocale))
-            val beatmap = embed.beatmap!!
+            val request = BeatmapSetRequest(null, name.asString.toInt(), interaction.userLocale)
+            val embed = beatmapService.getBeatmapEmbed(request)
 
-            return complete.sendMessageEmbeds(embed.toMessageEmbed())
-                .addActionRow(Button.link(beatmap.url, "Download"))
-                .addBeatmapPreview(embed.beatmap!!)
+            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed)
         }
 
         return interaction.notImplemented()
@@ -54,30 +60,50 @@ class BeatmapController(
                       @OptionParam("name") name: OptionMapping?): RestAction<*> {
         if (name?.asString?.toLongOrNull() != null) {
             val complete = interaction.deferReply().complete()
-            val embed = service.getBeatmapSetEmbed(name.asString.toInt(), interaction.userLocale)
-
-            val back = Button.primary("beatmapset:change:${embed.beatmap.beatmapSetId}-${embed.back}", "Back")
-                .withDisabled(!embed.hasBack())
-                .withEmoji(Emoji.fromUnicode("U+2B05"))
-
-            val download = Button.link(embed.beatmap.url, "Download")
-
-            val next = Button.primary("beatmapset:change:${embed.beatmap.beatmapSetId}-${embed.next}", "Next")
-                .withDisabled(!embed.hasNext())
-                .withEmoji(Emoji.fromUnicode("U+27A1"))
-
-            return complete.sendMessageEmbeds(embed.toMessageEmbed())
-                .addActionRow(back, download, next)
-                .addBeatmapPreview(embed.beatmap)
+            val embed = beatmapService.getBeatmapEmbed(BeatmapSetRequest(name.asString.toInt(), null, interaction.userLocale))
+            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed)
         }
         return interaction.notImplemented()
     }
 
-    fun <R : MessageCreateRequest<R>> MessageCreateRequest<R>.addBeatmapPreview(beatmap: Beatmap): R {
-        return this.addFiles(FileUpload.fromData(URL(beatmap.beatmapSet!!.previewUrl).openStream(), "${beatmap.id}.mp3"))
+    @SlashCommand(name = "search", description = "Search a beatmap")
+    @SlashCommandOptions([
+        SlashCommandOption(
+            name = "query",
+            description = "Beatmap name",
+            required = true
+    )])
+    fun search(interaction: SlashCommandInteraction,
+               @OptionParam("query") query: OptionMapping?): RestAction<*> {
+        val complete = interaction.deferReply().complete()
+        if (query == null) {
+            return interaction.notImplemented()
+        }
+        val request = BeatmapSearchRequest(query.asString, interaction.userLocale)
+
+        return complete.sendBeatmapEmbed(SEARCH_CHANGE, searchService.getSearchEmbed(request))
     }
 
     fun SlashCommandInteraction.notImplemented() =
         this.reply("Está função ainda não está implementada").setEphemeral(true)
 
+    private fun <R : MessageCreateRequest<R>> MessageCreateRequest<R>.addButtons(prefix: String, embed: DiscordBeatmapEmbed): R {
+        val back = Button.primary("$prefix${embed.payload.beatmapSetId}-${embed.back}", "Back")
+            .withDisabled(!embed.hasBack())
+            .withEmoji(Emoji.fromUnicode("U+2B05"))
+
+        val download = Button.link(embed.payload.url, "Download")
+
+        val next = Button.primary("$prefix${embed.payload.beatmapSetId}-${embed.next}", "Next")
+            .withDisabled(!embed.hasNext())
+            .withEmoji(Emoji.fromUnicode("U+27A1"))
+
+        return this.addActionRow(back, download, next)
+    }
+
+    private fun InteractionHook.sendBeatmapEmbed(prefix: String, embed: DiscordBeatmapEmbed): WebhookMessageCreateAction<Message> {
+        return this.sendMessageEmbeds(embed.toMessageEmbed())
+            .addButtons(prefix, embed)
+            .addFiles(FileUpload.fromData(URL(embed.payload.beatmapSet!!.previewUrl).openStream(), "${embed.payload.id}.mp3"))
+    }
 }

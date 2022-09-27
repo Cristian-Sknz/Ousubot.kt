@@ -1,5 +1,6 @@
 package me.sknz.ousubot.spring
 
+import me.sknz.ousubot.core.context.CustomEmojis
 import me.sknz.ousubot.core.xml.DiscordDialect
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
@@ -38,11 +39,16 @@ class TemplateEngineConfiguration {
     }
 
     @Bean
+    fun customEmojis(): CustomEmojis {
+        return CustomEmojis()
+    }
+
+    @Bean
     fun springTemplateEngine(@Qualifier("springResourceTemplateResolver") resolver: SpringResourceTemplateResolver): SpringTemplateEngine {
         val engine = SpringTemplateEngine()
         engine.setTemplateResolver(resolver)
         engine.addDialect(Java8TimeDialect())
-        engine.addDialect(DiscordDialect())
+        engine.addDialect(DiscordDialect(customEmojis()))
 
         return engine
     }
