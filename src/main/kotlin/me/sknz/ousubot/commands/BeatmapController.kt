@@ -36,14 +36,13 @@ class BeatmapController(
             required = true
     )])
     fun getBeatmap(interaction: SlashCommandInteraction,
-                   @OptionParam("name") name: OptionMapping?
-    ): RestAction<*> {
+                   @OptionParam("name") name: OptionMapping?): RestAction<*> {
         if (name?.asString?.toLongOrNull() != null) {
             val complete = interaction.deferReply(false).complete()
             val request = BeatmapSetRequest(null, name.asString.toInt(), interaction.userLocale)
             val embed = beatmapService.getBeatmapEmbed(request)
 
-            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed)
+            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
         }
 
         return interaction.notImplemented()
@@ -61,7 +60,7 @@ class BeatmapController(
         if (name?.asString?.toLongOrNull() != null) {
             val complete = interaction.deferReply().complete()
             val embed = beatmapService.getBeatmapEmbed(BeatmapSetRequest(name.asString.toInt(), null, interaction.userLocale))
-            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed)
+            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
         }
         return interaction.notImplemented()
     }
@@ -81,29 +80,29 @@ class BeatmapController(
         }
         val request = BeatmapSearchRequest(query.asString, interaction.userLocale)
 
-        return complete.sendBeatmapEmbed(SEARCH_CHANGE, searchService.getSearchEmbed(request))
+        return complete.sendBeatmapEmbed(SEARCH_CHANGE, searchService.getSearchEmbed(request), request.query)
     }
 
     fun SlashCommandInteraction.notImplemented() =
         this.reply("Está função ainda não está implementada").setEphemeral(true)
 
-    private fun <R : MessageCreateRequest<R>> MessageCreateRequest<R>.addButtons(prefix: String, embed: DiscordBeatmapEmbed): R {
-        val back = Button.primary("$prefix${embed.payload.beatmapSetId}-${embed.back}", "Back")
+    private fun <R : MessageCreateRequest<R>> MessageCreateRequest<R>.addButtons(prefix: String, embed: DiscordBeatmapEmbed, reference: String?): R {
+        val back = Button.primary("$prefix${reference ?: embed.payload.beatmapSetId}-${embed.back}", "Back")
             .withDisabled(!embed.hasBack())
             .withEmoji(Emoji.fromUnicode("U+2B05"))
 
         val download = Button.link(embed.payload.url, "Download")
 
-        val next = Button.primary("$prefix${embed.payload.beatmapSetId}-${embed.next}", "Next")
+        val next = Button.primary("$prefix${reference ?: embed.payload.beatmapSetId}-${embed.next}", "Next")
             .withDisabled(!embed.hasNext())
             .withEmoji(Emoji.fromUnicode("U+27A1"))
 
         return this.addActionRow(back, download, next)
     }
 
-    private fun InteractionHook.sendBeatmapEmbed(prefix: String, embed: DiscordBeatmapEmbed): WebhookMessageCreateAction<Message> {
+    private fun InteractionHook.sendBeatmapEmbed(prefix: String, embed: DiscordBeatmapEmbed, reference: String?): WebhookMessageCreateAction<Message> {
         return this.sendMessageEmbeds(embed.toMessageEmbed())
-            .addButtons(prefix, embed)
+            .addButtons(prefix, embed, reference)
             .addFiles(FileUpload.fromData(URL(embed.payload.beatmapSet!!.previewUrl).openStream(), "${embed.payload.id}.mp3"))
     }
 }
