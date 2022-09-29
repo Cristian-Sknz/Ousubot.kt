@@ -10,6 +10,7 @@ import me.sknz.ousubot.core.commands.autocomplete.StringAutoComplete
 import me.sknz.ousubot.core.commands.exception.CommandRegisterException
 import me.sknz.ousubot.core.commands.tools.CommandParameterInjector
 import me.sknz.ousubot.core.context.SlashCommandContext
+import me.sknz.ousubot.core.exceptions.AbstractExceptionHandler
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
@@ -21,6 +22,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import net.dv8tion.jda.api.requests.RestAction
 import org.apache.logging.log4j.LogManager
 import org.springframework.context.ApplicationContext
+import java.lang.reflect.InvocationTargetException
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.findAnnotation
@@ -55,10 +57,16 @@ internal class SlashCommands(
         }
 
         val value = this.map[event.name.lowercase()]!!
-        value.getFunction(event.subcommandName)?.let {
-            val params = injector.getInitializedParameters(event, it)
-            val callback = it.call(value.instance, *params.toTypedArray())
-            if (callback is RestAction<*>) callback.queue()
+        try {
+            value.getFunction(event.subcommandName)?.let {
+                val params = injector.getInitializedParameters(event, it)
+                val callback = it.call(value.instance, *params.toTypedArray())
+                if (callback is RestAction<*>) callback.queue()
+            }
+        } catch (exception: InvocationTargetException) {
+            context.getBeansOfType(AbstractExceptionHandler::class.java).values.forEach {
+                it.onException(event, exception.targetException)
+            }
         }
     }
 

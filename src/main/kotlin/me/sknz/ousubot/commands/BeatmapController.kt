@@ -19,13 +19,16 @@ import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateRequest
+import org.springframework.context.MessageSource
 import java.net.URL
+import java.util.*
 
 @SlashCommandController
 @WorkInProgress
 class BeatmapController(
     private var beatmapService: BeatmapService<*>,
-    private var searchService: SearchService<*>
+    private var searchService: SearchService<*>,
+    private var source: MessageSource
 ) {
 
     @SlashCommand(name = "beatmap", description = "Get a beatmap")
@@ -44,8 +47,7 @@ class BeatmapController(
 
             return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
         }
-
-        return interaction.notImplemented()
+        TODO("Implementar a pesquisa de mapa pelo comando /beatmap")
     }
 
     @SlashCommand(name = "beatmapset", description = "Get a beatmapset")
@@ -62,7 +64,7 @@ class BeatmapController(
             val embed = beatmapService.getBeatmapEmbed(BeatmapSetRequest(name.asString.toInt(), null, interaction.userLocale))
             return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
         }
-        return interaction.notImplemented()
+        TODO("Implementar a pesquisa de mapa pelo comando /beatmapset")
     }
 
     @SlashCommand(name = "search", description = "Search a beatmap")
@@ -84,7 +86,7 @@ class BeatmapController(
     }
 
     fun SlashCommandInteraction.notImplemented() =
-        this.reply("Está função ainda não está implementada").setEphemeral(true)
+        this.reply(source.getMessage("exceptions.notimplemented", null, Locale.forLanguageTag(this.userLocale.locale))).setEphemeral(true)
 
     private fun <R : MessageCreateRequest<R>> MessageCreateRequest<R>.addButtons(prefix: String, embed: DiscordBeatmapEmbed, reference: String?): R {
         val back = Button.primary("$prefix${reference ?: embed.payload.beatmapSetId}-${embed.back}", "Back")
