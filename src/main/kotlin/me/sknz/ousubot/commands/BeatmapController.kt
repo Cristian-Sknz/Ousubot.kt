@@ -19,16 +19,13 @@ import net.dv8tion.jda.api.requests.RestAction
 import net.dv8tion.jda.api.requests.restaction.WebhookMessageCreateAction
 import net.dv8tion.jda.api.utils.FileUpload
 import net.dv8tion.jda.api.utils.messages.MessageCreateRequest
-import org.springframework.context.MessageSource
 import java.net.URL
-import java.util.*
 
 @SlashCommandController
 @WorkInProgress
 class BeatmapController(
     private var beatmapService: BeatmapService<*>,
     private var searchService: SearchService<*>,
-    private var source: MessageSource
 ) {
 
     @SlashCommand(name = "beatmap", description = "Get a beatmap")
@@ -75,18 +72,12 @@ class BeatmapController(
             required = true
     )])
     fun search(interaction: SlashCommandInteraction,
-               @OptionParam("query") query: OptionMapping?): RestAction<*> {
+               @OptionParam("query") query: OptionMapping): RestAction<*> {
         val complete = interaction.deferReply().complete()
-        if (query == null) {
-            return interaction.notImplemented()
-        }
         val request = BeatmapSearchRequest(query.asString, interaction.userLocale)
 
         return complete.sendBeatmapEmbed(SEARCH_CHANGE, searchService.getSearchEmbed(request), request.query)
     }
-
-    fun SlashCommandInteraction.notImplemented() =
-        this.reply(source.getMessage("exceptions.notimplemented", null, Locale.forLanguageTag(this.userLocale.locale))).setEphemeral(true)
 
     private fun <R : MessageCreateRequest<R>> MessageCreateRequest<R>.addButtons(prefix: String, embed: DiscordBeatmapEmbed, reference: String?): R {
         val back = Button.primary("$prefix${reference ?: embed.payload.beatmapSetId}-${embed.back}", "Back")
