@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.MessageEmbed
 import java.awt.Color
 import java.io.Serializable
+import java.time.OffsetDateTime
 
 /**
  * ## DiscordEmbed
@@ -23,6 +24,7 @@ open class DiscordEmbed(
     var fields: List<EmbedField> = emptyList(),
     var author: EmbedValue? = null,
     var footer: EmbedValue? = null,
+    var timestamp: OffsetDateTime? = null
 ): Serializable {
 
     data class EmbedField(
@@ -47,7 +49,8 @@ open class DiscordEmbed(
                 this.color?.rgb,
                 this.fields.map { EmbedField(it.name!!, it.value!!, it.isInline) },
                 this.author?.let { EmbedValue(this.author!!.name, this.author!!.url, this.author!!.iconUrl) },
-                this.footer?.let { EmbedValue(this.footer!!.text, null, this.footer!!.iconUrl) }
+                this.footer?.let { EmbedValue(this.footer!!.text, null, this.footer!!.iconUrl) },
+                this.timestamp
             )
         }
     }
@@ -60,10 +63,13 @@ open class DiscordEmbed(
             .setThumbnail(thumbnail)
             .setColor(color?.let { Color(it) })
             .setAuthor(author?.name, author?.url, author?.icon)
-            .setFooter(footer?.name, footer?.url)
+            .setFooter(footer?.name, footer?.icon)
             .let {
                 fields.forEach { field ->
                     it.addField(field.label, field.value, field.inline)
+                }
+                if (timestamp != null) {
+                    it.setTimestamp(timestamp)
                 }
                 it
             }

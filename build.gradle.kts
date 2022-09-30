@@ -16,6 +16,7 @@ extra["springCloudVersion"] = "2021.0.4"
 
 repositories {
     mavenCentral()
+    maven(url = "https://jitpack.io")
 }
 
 dependencies {
@@ -44,6 +45,8 @@ dependencies {
     // Template Engine
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.4.RELEASE")
+    implementation("com.github.Cristian-Sknz:OusuCanvas:2021.0506.0")
+
 
     // Temporary Database
     runtimeOnly("com.h2database:h2")

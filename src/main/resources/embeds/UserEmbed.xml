@@ -1,0 +1,42 @@
+<DiscordEmbed xmlns:th="http://www.thymeleaf.org" xmlns:discord="http://www.thymeleaf.org">
+    <title th:inline="text">
+        <name>Informações do Jogador</name>
+        <url th:text="${user.getUrl()}"/>
+        <icon/>
+    </title>
+    <description th:inline="text">:map: Ranking: #[[${user.statistics.globalRank}]]º
+        :clock3: Tempo de Jogo: [[${user.statistics.playTime / 3600}]] hour(s)
+        :cyclone: Precisão [[${user.statistics.hitAccuracy}]]%
+    </description>
+    <thumbnail th:text="${user.avatarUrl}"/>
+    <image>attachment://user_image.png</image>
+    <color th:text="${color}"/>
+    <fields>
+        <fields th:inline="text">
+            <label>Ranking Local:</label>
+            <value>:flag_[[${#strings.toLowerCase(user.country.code)}]]: [[${user.country.code}]] #[[${user.statistics.countryRank}]]º</value>
+            <inline>true</inline>
+        </fields>
+
+        <fields th:inline="text">
+            <label>Desempenho:</label>
+            <value>[[${user.statistics.pp}]]</value>
+            <inline>true</inline>
+        </fields>
+
+        <fields th:inline="text">
+            <label>Pontuação Total:</label>
+            <value>[[${user.statistics.totalScore}]]</value>
+            <inline>true</inline>
+        </fields>
+    </fields>
+    <author th:inline="text">
+        <name>[[${user.username}]]</name>
+        <url>[[${user.getUrl()}]]</url>
+        <icon>[[${user.avatarUrl}]]</icon>
+    </author>
+    <timestamp th:text="${user.joinDate}"/>
+    <footer>
+        <name>Conta desde</name>
+    </footer>
+</DiscordEmbed>
