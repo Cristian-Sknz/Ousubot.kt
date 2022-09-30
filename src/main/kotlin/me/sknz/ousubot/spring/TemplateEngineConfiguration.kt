@@ -3,6 +3,7 @@ package me.sknz.ousubot.spring
 import me.sknz.ousubot.core.context.CustomEmojis
 import me.sknz.ousubot.core.xml.DiscordDialect
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.context.MessageSource
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -45,14 +46,20 @@ class TemplateEngineConfiguration {
     }
 
     @Bean
-    fun springTemplateEngine(@Qualifier("springResourceTemplateResolver") resolver: SpringResourceTemplateResolver): SpringTemplateEngine {
+    fun messageSource(): MessageSource {
+        val messageSource = ReloadableResourceBundleMessageSource()
+        messageSource.setUseCodeAsDefaultMessage(true)
+        messageSource.setBasename("classpath:i18n/discord")
+        return messageSource
+    }
+
+    @Bean
+    fun springTemplateEngine(@Qualifier("springResourceTemplateResolver") resolver: SpringResourceTemplateResolver,
+                             messageSource: ReloadableResourceBundleMessageSource): SpringTemplateEngine {
         val engine = SpringTemplateEngine()
         engine.setTemplateResolver(resolver)
         engine.addDialect(Java8TimeDialect())
         engine.addDialect(DiscordDialect(customEmojis()))
-
-        val messageSource = ReloadableResourceBundleMessageSource()
-        messageSource.setBasename("classpath:i18n/discord")
         engine.setTemplateEngineMessageSource(messageSource)
 
         return engine

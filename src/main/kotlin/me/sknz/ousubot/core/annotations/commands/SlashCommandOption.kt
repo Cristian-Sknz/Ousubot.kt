@@ -30,5 +30,5 @@ annotation class SlashCommandOption(
     /**
      *  WARNING: O parametro autocomplete só aceita classes que estendem a [CommandAutoComplete]
      */
-    val autocomplete: KClass<*> = Void::class
+    val autocomplete: KClass<out CommandAutoComplete<*>> = CommandAutoComplete::class
 )

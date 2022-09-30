@@ -31,6 +31,7 @@ interface SearchService<T> {
      * para otimizar o processamento de uma requisição e evitar
      * requisições desnecessárias na API do Osu
      *
+     * @throws feign.FeignException.NotFound Caso não encontre nenhum beatmap
      * @param request Uma requisição de pesquisa
      */
     fun getSearchEmbed(request: BeatmapSearchRequest): DiscordBeatmapEmbed

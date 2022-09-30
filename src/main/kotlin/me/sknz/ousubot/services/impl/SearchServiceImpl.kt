@@ -6,6 +6,7 @@ import me.sknz.ousubot.api.OsuClientAPI
 import me.sknz.ousubot.api.models.beatmaps.BeatmapSearch
 import me.sknz.ousubot.api.models.beatmaps.BeatmapSet
 import me.sknz.ousubot.core.context.CustomEmojis
+import me.sknz.ousubot.core.exceptions.osuNotFound
 import me.sknz.ousubot.core.xml.DiscordEmbed
 import me.sknz.ousubot.dto.BeatmapSearchRequest
 import me.sknz.ousubot.dto.DiscordBeatmapEmbed
@@ -34,7 +35,7 @@ class SearchServiceImpl(
         val search = self.search(request.decode())
 
         if (search.total == 0) {
-            TODO("Não há beatmaps na pesquisa")
+            osuNotFound("Não foi encontrado nenhum beatmap na pesquisa ${request.decode()}")
         }
 
         if (request.beatmapSet != null) {
