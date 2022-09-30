@@ -18,6 +18,8 @@ abstract class AbstractDiscordEmbed<T>(
     val back: Int?,
     val payload: T
 ): Serializable {
+
+    constructor(embed: DiscordEmbed, payload: T): this(embed, null, null, payload)
     fun hasNext(): Boolean = next != null
     fun hasBack(): Boolean = back != null
     fun toMessageEmbed(): MessageEmbed = embed.toMessageEmbed()

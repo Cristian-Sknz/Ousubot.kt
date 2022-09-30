@@ -2,7 +2,6 @@ package me.sknz.ousubot.services
 
 import me.sknz.ousubot.dto.BeatmapSetRequest
 import me.sknz.ousubot.dto.DiscordBeatmapEmbed
-import org.springframework.cache.annotation.Cacheable
 
 /**
  * ## BeatmapService
@@ -12,15 +11,7 @@ import org.springframework.cache.annotation.Cacheable
  *
  * @see me.sknz.ousubot.commands.BeatmapController
  */
-interface BeatmapService<T> {
-
-    /**
-     * Pegar a instância desta classe como proxy.
-     *
-     * A anotação [Cacheable] funciona apenas na instância com proxy,
-     * se for utilizado o `this` o caching não irã funcionar.
-     */
-    var self: T
+interface BeatmapService<T> : CachedService<T> {
 
     /**
      * Função para pegar/gerar uma mensagem prontas.
