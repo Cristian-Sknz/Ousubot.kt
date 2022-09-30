@@ -19,7 +19,7 @@ abstract class AbstractExceptionHandler {
         }
     }
 
-    fun onException(event: GenericEvent?, throwable: Throwable) {
+    open fun onException(event: GenericEvent?, throwable: Throwable) {
         for ((key, value) in functions) {
             if (throwable::class === key) execute(value, event, throwable)
         }

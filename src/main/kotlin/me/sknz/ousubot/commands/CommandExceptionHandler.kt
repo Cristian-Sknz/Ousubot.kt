@@ -6,6 +6,7 @@ import feign.FeignException.ServiceUnavailable
 import feign.FeignException.Unauthorized
 import me.sknz.ousubot.core.annotations.ExceptionHandler
 import me.sknz.ousubot.core.exceptions.AbstractExceptionHandler
+import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import org.springframework.context.NoSuchMessageException
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
@@ -27,6 +28,11 @@ class CommandExceptionHandler(
     fun handleNotImplemented(interaction: SlashCommandInteractionEvent, exception: Throwable) {
         interaction.send(source.getMessage("exceptions.notimplemented", null,
             Locale.forLanguageTag(interaction.userLocale.locale)))
+    }
+
+    override fun onException(event: GenericEvent?, throwable: Throwable) {
+        throwable.printStackTrace()
+        super.onException(event, throwable)
     }
 
     @ExceptionHandler(NotFound::class)
