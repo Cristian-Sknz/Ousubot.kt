@@ -8,6 +8,8 @@ import me.sknz.ousubot.core.annotations.ExceptionHandler
 import me.sknz.ousubot.core.exceptions.AbstractExceptionHandler
 import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.springframework.context.NoSuchMessageException
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Component
@@ -21,18 +23,21 @@ import java.util.*
  */
 @Component
 class CommandExceptionHandler(
-    val source: ReloadableResourceBundleMessageSource
+    val source: ReloadableResourceBundleMessageSource,
 ) : AbstractExceptionHandler() {
+
+    val logger: Logger = LogManager.getLogger(this::class.java)
+
+    override fun onException(event: GenericEvent?, throwable: Throwable) {
+        logger.error("Ocorreu um erro ao tentar executar o comando (" +
+                "${(event as SlashCommandInteractionEvent).commandPath})", throwable)
+        super.onException(event, throwable)
+    }
 
     @ExceptionHandler(NotImplementedError::class)
     fun handleNotImplemented(interaction: SlashCommandInteractionEvent, exception: Throwable) {
         interaction.send(source.getMessage("exceptions.notimplemented", null,
             Locale.forLanguageTag(interaction.userLocale.locale)))
-    }
-
-    override fun onException(event: GenericEvent?, throwable: Throwable) {
-        throwable.printStackTrace()
-        super.onException(event, throwable)
     }
 
     @ExceptionHandler(NotFound::class)
