@@ -2,6 +2,7 @@ package me.sknz.ousubot.api.adapter
 
 import feign.RequestInterceptor
 import feign.RequestTemplate
+import me.sknz.ousubot.core.exceptions.osuInvalidApiKey
 import java.time.OffsetDateTime
 
 /**
@@ -30,7 +31,7 @@ class OsuAuthenticationInterceptor(
      */
     override fun apply(template: RequestTemplate) {
         val auth = repository.findAll().find { true } ?:
-            throw RuntimeException("Não existe nenhum código de acesso para a OsuAPI!")
+            osuInvalidApiKey("Não existe nenhum código de acesso para a OsuAPI!")
 
         if (auth.expireDate?.isAfter(OffsetDateTime.now()) == true) {
             template.header("Authorization", "Bearer ${auth.accessToken}")
