@@ -28,11 +28,11 @@ class BeatmapController(
     private var searchService: SearchService<*>,
 ) {
 
-    @SlashCommand(name = "beatmap", description = "Get a beatmap")
+    @SlashCommand(name = "beatmap", description = "Get information from a beatmaps")
     @SlashCommandOptions([
         SlashCommandOption(
             name = "name",
-            description = "Beatmap name or beatmap id",
+            description = "Beatmap name or ID",
             required = true
     )])
     fun getBeatmap(interaction: SlashCommandInteraction,
@@ -47,11 +47,11 @@ class BeatmapController(
         TODO("Implementar a pesquisa de mapa pelo comando /beatmap")
     }
 
-    @SlashCommand(name = "beatmapset", description = "Get a beatmapset")
+    @SlashCommand(name = "beatmapset", description = "Get information from a set of beatmaps")
     @SlashCommandOptions([
         SlashCommandOption(
             name = "name",
-            description = "Beatmapset name or beatmapset id",
+            description = "BeatmapSet name or ID",
             required = true
     )])
     fun getBeatmapSet(interaction: SlashCommandInteraction,
@@ -64,11 +64,11 @@ class BeatmapController(
         TODO("Implementar a pesquisa de mapa pelo comando /beatmapset")
     }
 
-    @SlashCommand(name = "search", description = "Search a beatmap")
+    @SlashCommand(name = "search", description = "Search beatmap sets")
     @SlashCommandOptions([
         SlashCommandOption(
             name = "query",
-            description = "Beatmap name",
+            description = "Beatmapset name",
             required = true
     )])
     fun search(interaction: SlashCommandInteraction,

@@ -15,11 +15,11 @@ class UserController(
     private var userService: UserService<*>
 ) {
 
-    @SlashCommand(name = "user", description = "Get a user")
+    @SlashCommand(name = "user", description = "Get basic information from an Osu user!")
     @SlashCommandOptions([
         SlashCommandOption(
             name = "name",
-            description = "User name or user id",
+            description = "User name",
             required = true
     )])
     fun getUser(interaction: SlashCommandInteraction,
