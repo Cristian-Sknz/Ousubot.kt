@@ -132,7 +132,7 @@ internal class SlashCommands(
 
         for (function in functions) {
             val command = function.findAnnotation<SlashCommand>()?.toCommand() ?: continue
-
+            command.setLocalizationFunction(DiscordI18nBundle)
             // Pegar todas as opções com autocomplete
             val options = let {
                 val values = arrayListOf<LinkedOption>()
@@ -174,6 +174,7 @@ internal class SlashCommands(
 
         val command = Commands.slash(annotation.name, "Not Specified")
         val subcommands = arrayListOf<LinkedSlashCommand>()
+        command.setLocalizationFunction(DiscordI18nBundle)
         for (function in functions) {
             val subcommand = function.findAnnotation<SlashCommand>()!!.toSubCommand()
 

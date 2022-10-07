@@ -1,5 +1,6 @@
 package me.sknz.ousubot.spring
 
+import me.sknz.ousubot.core.commands.DiscordI18nBundle
 import me.sknz.ousubot.core.context.CustomEmojis
 import me.sknz.ousubot.core.xml.DiscordDialect
 import org.springframework.beans.factory.annotation.Qualifier
@@ -7,7 +8,6 @@ import org.springframework.context.MessageSource
 import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect
 import org.thymeleaf.spring5.SpringTemplateEngine
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver
@@ -47,15 +47,12 @@ class TemplateEngineConfiguration {
 
     @Bean
     fun messageSource(): MessageSource {
-        val messageSource = ReloadableResourceBundleMessageSource()
-        messageSource.setUseCodeAsDefaultMessage(true)
-        messageSource.setBasename("classpath:i18n/discord")
-        return messageSource
+        return DiscordI18nBundle
     }
 
     @Bean
     fun springTemplateEngine(@Qualifier("springResourceTemplateResolver") resolver: SpringResourceTemplateResolver,
-                             messageSource: ReloadableResourceBundleMessageSource): SpringTemplateEngine {
+                             messageSource: DiscordI18nBundle): SpringTemplateEngine {
         val engine = SpringTemplateEngine()
         engine.setTemplateResolver(resolver)
         engine.addDialect(Java8TimeDialect())
