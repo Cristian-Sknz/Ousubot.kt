@@ -3,7 +3,9 @@ package me.sknz.ousubot.core.commands.tools
 import me.sknz.ousubot.core.annotations.commands.FromBean
 import me.sknz.ousubot.core.annotations.commands.OptionParam
 import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.events.interaction.command.GenericCommandInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.interactions.commands.CommandInteraction
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction
 import org.springframework.beans.BeansException
@@ -37,6 +39,7 @@ class CommandParameterInjector(
         val VALID_PARAMETERS = arrayOf(
             SlashCommandInteractionEvent::class,
             SlashCommandInteraction::class,
+            CommandInteraction::class,
             OptionMapping::class,
             User::class
         )
@@ -51,7 +54,7 @@ class CommandParameterInjector(
      * @param event Evento em que a função se encontra
      * @param function Função em que os parâmetros serão injetados posteriormente
      */
-    fun getInitializedParameters(event: SlashCommandInteractionEvent,
+    fun getInitializedParameters(event: GenericCommandInteractionEvent,
                                  function: KFunction<*>): List<Any?> {
         val parameters = function.parameters.toMutableList()
         parameters.removeFirst()
@@ -71,6 +74,7 @@ class CommandParameterInjector(
             when {
                 clazz.isSuperclassOf(SlashCommandInteractionEvent::class) -> event
                 clazz.isSuperclassOf(SlashCommandInteraction::class) -> event.interaction
+                clazz.isSuperclassOf(CommandInteraction::class) -> event
                 clazz.isSuperclassOf(OptionMapping::class) -> {
                     parameter.findAnnotation<OptionParam>()?.let {
                         event.getOption(it.value)

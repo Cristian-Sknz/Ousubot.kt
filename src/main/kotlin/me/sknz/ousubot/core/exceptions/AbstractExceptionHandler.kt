@@ -28,7 +28,7 @@ abstract class AbstractExceptionHandler {
     private fun execute(function: KFunction<*>, vararg args: Any?) {
         val parameters = function.parameters.map { parameter ->
             (parameter.type.classifier as KClass<*>).let {
-                args.filterNotNull().find { argument -> it.isSubclassOf(argument::class)  }
+                args.filterNotNull().find { argument -> argument::class.isSubclassOf(it) }
             }
         }.toMutableList()
         parameters.removeFirst()

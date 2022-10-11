@@ -1,4 +1,4 @@
-package me.sknz.ousubot.core.commands
+package me.sknz.ousubot.core.i18n
 
 import net.dv8tion.jda.api.interactions.DiscordLocale
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction

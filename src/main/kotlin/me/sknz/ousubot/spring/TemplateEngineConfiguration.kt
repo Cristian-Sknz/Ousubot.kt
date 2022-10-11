@@ -1,6 +1,6 @@
 package me.sknz.ousubot.spring
 
-import me.sknz.ousubot.core.commands.DiscordI18nBundle
+import me.sknz.ousubot.core.i18n.DiscordI18nBundle
 import me.sknz.ousubot.core.context.CustomEmojis
 import me.sknz.ousubot.core.xml.DiscordDialect
 import org.springframework.beans.factory.annotation.Qualifier
@@ -52,7 +52,8 @@ class TemplateEngineConfiguration {
 
     @Bean
     fun springTemplateEngine(@Qualifier("springResourceTemplateResolver") resolver: SpringResourceTemplateResolver,
-                             messageSource: DiscordI18nBundle): SpringTemplateEngine {
+                             messageSource: DiscordI18nBundle
+    ): SpringTemplateEngine {
         val engine = SpringTemplateEngine()
         engine.setTemplateResolver(resolver)
         engine.addDialect(Java8TimeDialect())

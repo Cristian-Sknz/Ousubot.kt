@@ -1,13 +1,10 @@
 package me.sknz.ousubot.commands
 
-import feign.FeignException.InternalServerError
-import feign.FeignException.NotFound
-import feign.FeignException.ServiceUnavailable
-import feign.FeignException.Unauthorized
+import feign.FeignException.*
 import me.sknz.ousubot.core.annotations.ExceptionHandler
 import me.sknz.ousubot.core.exceptions.AbstractExceptionHandler
 import net.dv8tion.jda.api.events.GenericEvent
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.interactions.commands.CommandInteraction
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import org.springframework.context.NoSuchMessageException
@@ -30,18 +27,18 @@ class CommandExceptionHandler(
 
     override fun onException(event: GenericEvent?, throwable: Throwable) {
         logger.error("Ocorreu um erro ao tentar executar o comando (" +
-                "${(event as SlashCommandInteractionEvent).commandPath})", throwable)
+                "${(event as CommandInteraction).commandPath})", throwable)
         super.onException(event, throwable)
     }
 
     @ExceptionHandler(NotImplementedError::class)
-    fun handleNotImplemented(interaction: SlashCommandInteractionEvent, exception: Throwable) {
+    fun handleNotImplemented(interaction: CommandInteraction, exception: Throwable) {
         interaction.send(source.getMessage("exceptions.notimplemented", null,
             Locale.forLanguageTag(interaction.userLocale.locale)))
     }
 
     @ExceptionHandler(NotFound::class)
-    fun handleNotFound(interaction: SlashCommandInteractionEvent, exception: NotFound) {
+    fun handleNotFound(interaction: CommandInteraction, exception: NotFound) {
         try {
             val command = interaction.commandPath.replace("/", ".")
             interaction.send(source.getMessage("osu.exceptions.notfound.$command", null,
@@ -55,28 +52,28 @@ class CommandExceptionHandler(
     }
 
     @ExceptionHandler(Unauthorized::class)
-    fun handleUnauthorized(interaction: SlashCommandInteractionEvent) {
+    fun handleUnauthorized(interaction: CommandInteraction) {
         interaction.send(source.getMessage("osu.exceptions.unauthorized", null,
             Locale.forLanguageTag(interaction.userLocale.locale)))
     }
 
     @ExceptionHandler(ServiceUnavailable::class)
-    fun handleServiceUnavailable(interaction: SlashCommandInteractionEvent) {
+    fun handleServiceUnavailable(interaction: CommandInteraction) {
         interaction.send(source.getMessage("osu.exceptions.internal.server", null,
             Locale.forLanguageTag(interaction.userLocale.locale)))
     }
 
     @ExceptionHandler(InternalServerError::class)
-    fun handleInternalServerError(interaction: SlashCommandInteractionEvent) {
+    fun handleInternalServerError(interaction: CommandInteraction) {
         interaction.send(source.getMessage("osu.exceptions.internal.server", null,
             Locale.forLanguageTag(interaction.userLocale.locale)))
     }
 
-    private fun SlashCommandInteractionEvent.send(message: String) {
+    private fun CommandInteraction.send(message: String) {
         try {
             this.reply(message).setEphemeral(true).queue(null) {
-                if (it is IllegalStateException) interaction.hook.sendMessage(message).queue()
+                if (it is IllegalStateException) this.hook.sendMessage(message).queue()
             }
-        } catch (_: Exception) { interaction.hook.sendMessage(message).queue() }
+        } catch (_: Exception) { this.hook.sendMessage(message).queue() }
     }
 }

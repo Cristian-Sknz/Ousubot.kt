@@ -16,4 +16,5 @@ package me.sknz.ousubot.core.annotations.commands
 @Target(AnnotationTarget.FUNCTION)
 annotation class SlashCommand(val name: String,
                               val description: String = "Not specified")
-
+annotation class MessageInteraction(val name: String)
+annotation class UserInteraction(val name: String)

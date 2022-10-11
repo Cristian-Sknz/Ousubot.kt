@@ -11,7 +11,9 @@ import me.sknz.ousubot.services.BeatmapService
 import me.sknz.ousubot.services.SearchService
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.emoji.Emoji
+import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent
 import net.dv8tion.jda.api.interactions.InteractionHook
+import net.dv8tion.jda.api.interactions.commands.CommandInteraction
 import net.dv8tion.jda.api.interactions.commands.OptionMapping
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction
 import net.dv8tion.jda.api.interactions.components.buttons.Button
@@ -48,14 +50,18 @@ class BeatmapController(
     }
 
     @SlashCommand(name = "beatmapset", description = "Get information from a set of beatmaps")
+    @MessageInteraction(name = "Get Beatmap from Link")
     @SlashCommandOptions([
         SlashCommandOption(
             name = "name",
             description = "BeatmapSet name or ID",
             required = true
     )])
-    fun getBeatmapSet(interaction: SlashCommandInteraction,
+    fun getBeatmapSet(interaction: CommandInteraction,
                       @OptionParam("name") name: OptionMapping?): RestAction<*> {
+        if (interaction is MessageContextInteractionEvent) {
+            TODO("Implementar interação por mensagem")
+        }
         if (name?.asString?.toLongOrNull() != null) {
             val complete = interaction.deferReply().complete()
             val embed = beatmapService.getBeatmapEmbed(BeatmapSetRequest(name.asString.toInt(), null, interaction.userLocale))
