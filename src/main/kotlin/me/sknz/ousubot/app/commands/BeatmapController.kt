@@ -1,14 +1,15 @@
 package me.sknz.ousubot.app.commands
 
-import me.sknz.ousubot.infrastructure.annotations.WorkInProgress
-import me.sknz.ousubot.infrastructure.annotations.commands.*
+import me.sknz.ousubot.app.interactions.BeatmapSetButtonController.Companion.BEATMAPSET_CHANGE
+import me.sknz.ousubot.app.interactions.SearchButtonController.Companion.SEARCH_CHANGE
 import me.sknz.ousubot.domain.dto.BeatmapSearchRequest
 import me.sknz.ousubot.domain.dto.BeatmapSetRequest
 import me.sknz.ousubot.domain.dto.DiscordBeatmapEmbed
-import me.sknz.ousubot.app.interactions.BeatmapSetButtonController.Companion.BEATMAPSET_CHANGE
-import me.sknz.ousubot.app.interactions.SearchButtonController.Companion.SEARCH_CHANGE
 import me.sknz.ousubot.domain.services.BeatmapService
 import me.sknz.ousubot.domain.services.SearchService
+import me.sknz.ousubot.infrastructure.annotations.WorkInProgress
+import me.sknz.ousubot.infrastructure.annotations.commands.*
+import me.sknz.ousubot.infrastructure.tools.BeatmapDetector
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import net.dv8tion.jda.api.events.interaction.command.MessageContextInteractionEvent
@@ -60,8 +61,13 @@ class BeatmapController(
     fun getBeatmapSet(interaction: CommandInteraction,
                       @OptionParam("name") name: OptionMapping?): RestAction<*> {
         if (interaction is MessageContextInteractionEvent) {
-            TODO("Implementar interação por mensagem")
+            val detector = BeatmapDetector.detect(interaction.target)
+            val complete = interaction.deferReply().complete()
+            val embed = beatmapService.getBeatmapEmbed(BeatmapSetRequest(detector.beatmapSet, detector.beatmap, interaction.userLocale))
+
+            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
         }
+
         if (name?.asString?.toLongOrNull() != null) {
             val complete = interaction.deferReply().complete()
             val embed = beatmapService.getBeatmapEmbed(BeatmapSetRequest(name.asString.toInt(), null, interaction.userLocale))

@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.events.GenericEvent
 import net.dv8tion.jda.api.interactions.commands.CommandInteraction
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import org.springframework.context.NoSuchMessageException
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.stereotype.Component
 import java.util.*
@@ -40,12 +39,22 @@ class CommandExceptionHandler(
     @ExceptionHandler(NotFound::class)
     fun handleNotFound(interaction: CommandInteraction, exception: NotFound) {
         try {
-            val command = interaction.commandPath.replace("/", ".")
-            interaction.send(source.getMessage("osu.exceptions.notfound.$command", null,
-                Locale.forLanguageTag(interaction.userLocale.locale)))
-        } catch (e: NoSuchMessageException) {
-            interaction.send(source.getMessage("osu.exceptions.notfound", null,
-                Locale.forLanguageTag(interaction.userLocale.locale)))
+            val command = interaction.commandPath
+                .replace("/", ".")
+                .replace(" ", "_")
+                .lowercase()
+
+            val code = "osu.exceptions.notfound.$command"
+            val message = source.getMessage(code, null,
+                Locale.forLanguageTag(interaction.userLocale.locale))
+
+            if (message.equals(code, true)){
+                interaction.send(source.getMessage("osu.exceptions.notfound", null,
+                    Locale.forLanguageTag(interaction.userLocale.locale)))
+                return
+            }
+
+            interaction.send(message)
         } catch (e: Throwable) {
             e.printStackTrace()
         }
