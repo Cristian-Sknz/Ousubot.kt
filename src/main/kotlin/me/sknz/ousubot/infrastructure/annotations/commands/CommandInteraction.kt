@@ -16,5 +16,11 @@ package me.sknz.ousubot.infrastructure.annotations.commands
 @Target(AnnotationTarget.FUNCTION)
 annotation class SlashCommand(val name: String,
                               val description: String = "Not specified")
+
+@Retention(value = AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
 annotation class MessageInteraction(val name: String)
+
+@Retention(value = AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FUNCTION)
 annotation class UserInteraction(val name: String)
