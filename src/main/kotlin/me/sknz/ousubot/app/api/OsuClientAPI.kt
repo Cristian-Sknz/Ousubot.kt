@@ -3,6 +3,7 @@ package me.sknz.ousubot.app.api
 import me.sknz.ousubot.app.api.models.beatmaps.Beatmap
 import me.sknz.ousubot.app.api.models.beatmaps.BeatmapSearch
 import me.sknz.ousubot.app.api.models.beatmaps.BeatmapSet
+import me.sknz.ousubot.app.api.models.scores.BeatmapScores
 import me.sknz.ousubot.app.api.models.users.User
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PathVariable
@@ -26,4 +27,7 @@ interface OsuClientAPI {
 
     @RequestMapping(method = [RequestMethod.GET], value= ["/users/{user}"])
     fun getUser(@PathVariable("user") user: String): User
+
+    @RequestMapping(method = [RequestMethod.GET], value = ["/beatmaps/{beatmap}/scores"])
+    fun getBeatmapScore(@PathVariable("beatmap") beatmapId: Int): BeatmapScores
 }
