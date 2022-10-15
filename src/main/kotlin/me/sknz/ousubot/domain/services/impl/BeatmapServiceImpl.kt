@@ -1,20 +1,18 @@
 package me.sknz.ousubot.domain.services.impl
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import me.sknz.ousubot.app.api.OsuClientAPI
 import me.sknz.ousubot.app.api.models.beatmaps.Beatmap
 import me.sknz.ousubot.app.api.models.beatmaps.BeatmapSet
 import me.sknz.ousubot.domain.dto.BeatmapSetRequest
 import me.sknz.ousubot.domain.dto.DiscordBeatmapEmbed
-import me.sknz.ousubot.infrastructure.xml.DiscordEmbed
 import me.sknz.ousubot.domain.services.BeatmapService
+import me.sknz.ousubot.domain.utils.template
+import me.sknz.ousubot.infrastructure.xml.DiscordEmbed
 import me.sknz.ousubot.utils.ColorThief
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
-import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.SpringTemplateEngine
 import java.util.*
 
@@ -94,23 +92,12 @@ class BeatmapServiceImpl(override val client: OsuClientAPI,
      * @see DiscordEmbed
      */
     fun process(beatmap: Beatmap, locale: Locale): DiscordEmbed {
-        val ctx = Context()
-            .addVariable("beatmap", beatmap)
-            .addVariable("color", ColorThief.getPredominatColor(beatmap.beatmapSet!!.covers.card, true).rgb)
+        return template(engine) {
+            template = "BeatmapInfo"
+            language = locale
 
-        ctx.locale = locale
-
-        val xml = engine.process("BeatmapInfo", ctx)
-
-        val mapper = XmlMapper()
-            .findAndRegisterModules()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-        return mapper.readValue(xml, DiscordEmbed::class.java)
-    }
-
-    private fun Context.addVariable(key: String, value: Any): Context {
-        this.setVariable(key, value)
-        return this
+            variables["beatmap"] = beatmap
+            variables["color"] = ColorThief.getPredominatColor(beatmap.beatmapSet!!.covers.card, true).rgb
+        }
     }
 }

@@ -11,6 +11,7 @@ import me.sknz.ousubot.infrastructure.xml.DiscordEmbed
 import me.sknz.ousubot.domain.dto.DiscordUserEmbed
 import me.sknz.ousubot.domain.dto.UserRequest
 import me.sknz.ousubot.domain.services.UserService
+import me.sknz.ousubot.domain.utils.template
 import me.sknz.ousubot.infrastructure.tools.KotlinImageBuilder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
@@ -67,25 +68,14 @@ class UserServiceImpl(override val client: OsuClientAPI,
     }
 
     fun process(user: User, locale: Locale): DiscordEmbed {
-        val ctx = Context()
-            .addVariable("user", user)
-            .addVariable("color", (user.profileColour?.let {
+        return template(engine) {
+            template = "UserEmbed"
+            language = locale
+
+            variables["user"] = user
+            variables["color"] = (user.profileColour?.let {
                 Color.decode(it)
-            } ?: Color.ORANGE).rgb)
-
-        ctx.locale = locale
-
-        val xml = engine.process("UserEmbed", ctx)
-
-        val mapper = XmlMapper()
-            .findAndRegisterModules()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-        return mapper.readValue(xml, DiscordEmbed::class.java)
-    }
-
-    private fun Context.addVariable(key: String, value: Any): Context {
-        this.setVariable(key, value)
-        return this
+            } ?: Color.ORANGE).rgb
+        }
     }
 }

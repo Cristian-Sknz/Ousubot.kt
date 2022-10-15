@@ -1,23 +1,21 @@
 package me.sknz.ousubot.domain.services.impl
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import me.sknz.ousubot.app.api.OsuClientAPI
 import me.sknz.ousubot.app.api.models.beatmaps.BeatmapSearch
 import me.sknz.ousubot.app.api.models.beatmaps.BeatmapSet
 import me.sknz.ousubot.domain.dto.BeatmapSearchRequest
 import me.sknz.ousubot.domain.dto.DiscordBeatmapEmbed
-import me.sknz.ousubot.infrastructure.tools.CustomEmojis
-import me.sknz.ousubot.infrastructure.exceptions.osuNotFound
-import me.sknz.ousubot.infrastructure.xml.DiscordEmbed
 import me.sknz.ousubot.domain.services.SearchService
+import me.sknz.ousubot.domain.utils.template
+import me.sknz.ousubot.infrastructure.exceptions.osuNotFound
+import me.sknz.ousubot.infrastructure.tools.CustomEmojis
+import me.sknz.ousubot.infrastructure.xml.DiscordEmbed
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
-import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.SpringTemplateEngine
-import java.util.Locale
+import java.util.*
 import java.util.stream.Collectors
 
 @Service
@@ -69,39 +67,6 @@ class SearchServiceImpl(override val client: OsuClientAPI,
         throw RuntimeException("Este beatmapSetId não faz parte deste BeatmapSet")
     }
 
-
-    /**
-     * Função para gerar uma mensagem pronta utilizando um engine template.
-     *
-     * @param beatmapSet [BeatmapSet] que será gerado em forma de [DiscordEmbed]
-     * @see DiscordEmbed
-     */
-    fun process(beatmapSet: BeatmapSet, locale: Locale): DiscordEmbed {
-        val beatmaps = beatmapSet.beatmaps!!
-        val versions = beatmaps.stream()
-            .map { "${emojis.getEmoji(it.mode.name)?.asMention} ${it.version} (${it.difficultyRating})" }
-            .limit(5).collect(Collectors.toList())
-
-        if (beatmaps.size > 5) {
-            versions.add("[......]")
-        }
-
-        val ctx = Context()
-            .addVariable("beatmapSet", beatmapSet)
-            .addVariable("versions", versions)
-            .addVariable("modes", beatmaps.map { it.mode.name }.distinct())
-
-        ctx.locale = locale
-
-        val xml = engine.process("SearchEmbed", ctx)
-
-        val mapper = XmlMapper()
-            .findAndRegisterModules()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-
-        return mapper.readValue(xml, DiscordEmbed::class.java)
-    }
-
     /**
      * Função para fazer uma requisição utilizando [OsuClientAPI],
      * e guardar o resultado em cache.
@@ -114,8 +79,31 @@ class SearchServiceImpl(override val client: OsuClientAPI,
         return client.searchBeatmap(query)
     }
 
-    private fun Context.addVariable(key: String, value: Any): Context {
-        this.setVariable(key, value)
-        return this
+    /**
+     * Função para gerar uma mensagem pronta utilizando um engine template.
+     *
+     * @param beatmapSet [BeatmapSet] que será gerado em forma de [DiscordEmbed]
+     * @see DiscordEmbed
+     */
+    fun process(beatmapSet: BeatmapSet, locale: Locale): DiscordEmbed {
+        return template(engine) {
+            template = "SearchEmbed"
+            language = locale
+
+            val beatmaps = beatmapSet.beatmaps!!
+            val versions = beatmaps.stream()
+                .map { "${emojis.getEmoji(it.mode.name)?.asMention} ${it.version} (${it.difficultyRating})" }
+                .limit(5)
+                .collect(Collectors.toList())
+
+            if (beatmaps.size > 5) {
+                versions.add("[......]")
+            }
+
+            variables["beatmapSet"] = beatmapSet
+            variables["versions"] = versions
+            variables["modes"] = beatmaps.map { it.mode.name }.distinct()
+        }
     }
+
 }
