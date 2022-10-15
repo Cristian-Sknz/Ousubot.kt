@@ -21,11 +21,9 @@ import java.util.Locale
 import java.util.stream.Collectors
 
 @Service
-class SearchServiceImpl(
-    private val client: OsuClientAPI,
-    private val engine: SpringTemplateEngine,
-    private val emojis: CustomEmojis
-): SearchService<SearchServiceImpl> {
+class SearchServiceImpl(override val client: OsuClientAPI,
+                        override val engine: SpringTemplateEngine,
+                        private val emojis: CustomEmojis): SearchService<SearchServiceImpl> {
 
     @Autowired
     @Lazy

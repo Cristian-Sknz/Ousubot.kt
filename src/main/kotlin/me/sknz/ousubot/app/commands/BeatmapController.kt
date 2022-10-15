@@ -31,33 +31,9 @@ class BeatmapController(
     private var searchService: SearchService<*>,
 ) {
 
-    @SlashCommand(name = "beatmap", description = "Get information from a beatmaps")
-    @SlashCommandOptions([
-        SlashCommandOption(
-            name = "name",
-            description = "Beatmap name or ID",
-            required = true
-    )])
-    fun getBeatmap(interaction: SlashCommandInteraction,
-                   @OptionParam("name") name: OptionMapping?): RestAction<*> {
-        if (name?.asString?.toLongOrNull() != null) {
-            val complete = interaction.deferReply(false).complete()
-            val request = BeatmapSetRequest(null, name.asString.toInt(), interaction.userLocale)
-            val embed = beatmapService.getBeatmapEmbed(request)
-
-            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
-        }
-        TODO("Implementar a pesquisa de mapa pelo comando /beatmap")
-    }
-
     @SlashCommand(name = "beatmapset", description = "Get information from a set of beatmaps")
-    @MessageInteraction(name = "View Beatmap from Message")
-    @SlashCommandOptions([
-        SlashCommandOption(
-            name = "name",
-            description = "BeatmapSet name or ID",
-            required = true
-    )])
+    @MessageInteraction("View Beatmap from Message")
+    @SlashCommandOption(name = "name", description = "BeatmapSet name or ID", required = true)
     fun getBeatmapSet(interaction: CommandInteraction,
                       @OptionParam("name") name: OptionMapping?): RestAction<*> {
         if (interaction is MessageContextInteractionEvent) {
@@ -66,15 +42,29 @@ class BeatmapController(
             val embed = beatmapService.getBeatmapEmbed(BeatmapSetRequest(detector.beatmapSet, detector.beatmap, interaction.userLocale))
 
             return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
-        }
-
-        if (name?.asString?.toLongOrNull() != null) {
+        } else if (name!!.asString.toLongOrNull() != null) {
             val complete = interaction.deferReply().complete()
             val embed = beatmapService.getBeatmapEmbed(BeatmapSetRequest(name.asString.toInt(), null, interaction.userLocale))
             return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
         }
-        TODO("Implementar a pesquisa de mapa pelo comando /beatmapset")
+
+        return this.search(interaction, name)
     }
+
+    @SlashCommand(name = "beatmap", description = "Get information from a beatmaps")
+    @SlashCommandOption(name = "name", description = "Beatmap name or ID", required = true)
+    fun getBeatmap(interaction: SlashCommandInteraction,
+                   @OptionParam("name") name: OptionMapping): RestAction<*> {
+        if (name.asString.toLongOrNull() != null) {
+            val complete = interaction.deferReply(false).complete()
+            val request = BeatmapSetRequest(null, name.asString.toInt(), interaction.userLocale)
+            val embed = beatmapService.getBeatmapEmbed(request)
+
+            return complete.sendBeatmapEmbed(BEATMAPSET_CHANGE, embed, null)
+        }
+        return this.search(interaction, name)
+    }
+
 
     @SlashCommand(name = "search", description = "Search beatmap sets")
     @SlashCommandOptions([
@@ -83,7 +73,7 @@ class BeatmapController(
             description = "Beatmapset name",
             required = true
     )])
-    fun search(interaction: SlashCommandInteraction,
+    fun search(interaction: CommandInteraction,
                @OptionParam("query") query: OptionMapping): RestAction<*> {
         val complete = interaction.deferReply().complete()
         val request = BeatmapSearchRequest(query.asString, interaction.userLocale)

@@ -31,7 +31,7 @@ class UserServiceImpl(override val client: OsuClientAPI,
     @Lazy
     override lateinit var self: UserServiceImpl
 
-    override fun getUserService(request: UserRequest): DiscordUserEmbed {
+    override fun getUserEmbed(request: UserRequest): DiscordUserEmbed {
         val user = client.getUser(request.username)
         val embed = process(user, request.locale)
 

@@ -1,4 +1,4 @@
-package me.sknz.ousubot.domain.services
+package me.sknz.ousubot.domain.services.type
 
 import org.springframework.cache.annotation.Cacheable
 

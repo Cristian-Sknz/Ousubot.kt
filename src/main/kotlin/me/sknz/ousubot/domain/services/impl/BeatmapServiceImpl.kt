@@ -19,10 +19,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine
 import java.util.*
 
 @Service
-class BeatmapServiceImpl(
-    private val client: OsuClientAPI,
-    private val engine: SpringTemplateEngine,
-): BeatmapService<BeatmapServiceImpl> {
+class BeatmapServiceImpl(override val client: OsuClientAPI,
+                         override val engine: SpringTemplateEngine, ): BeatmapService<BeatmapServiceImpl> {
 
     @Autowired
     @Lazy

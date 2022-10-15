@@ -3,6 +3,8 @@ package me.sknz.ousubot.domain.services
 import me.sknz.ousubot.app.commands.BeatmapController
 import me.sknz.ousubot.domain.dto.BeatmapSetRequest
 import me.sknz.ousubot.domain.dto.DiscordBeatmapEmbed
+import me.sknz.ousubot.domain.services.type.CachedService
+import me.sknz.ousubot.domain.services.type.OsuAPIService
 
 /**
  * ## BeatmapService
@@ -12,7 +14,7 @@ import me.sknz.ousubot.domain.dto.DiscordBeatmapEmbed
  *
  * @see BeatmapController
  */
-interface BeatmapService<T> : CachedService<T> {
+interface BeatmapService<T: BeatmapService<T>> : CachedService<T>, OsuAPIService {
 
     /**
      * Função para pegar/gerar uma mensagem prontas.

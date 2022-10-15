@@ -25,7 +25,7 @@ class UserController(
     fun getUser(interaction: SlashCommandInteraction,
                 @OptionParam("name") name: OptionMapping): RestAction<*> {
         val complete = interaction.deferReply().complete()
-        val embed = userService.getUserService(UserRequest(name.asString, interaction.userLocale))
+        val embed = userService.getUserEmbed(UserRequest(name.asString, interaction.userLocale))
         val stream = ByteArrayOutputStream()
         ImageIO.write(embed.payload.image, "png", stream)
 

@@ -1,10 +1,10 @@
 package me.sknz.ousubot.domain.services
 
-import me.sknz.ousubot.app.api.OsuClientAPI
 import me.sknz.ousubot.app.commands.UserController
 import me.sknz.ousubot.domain.dto.DiscordUserEmbed
 import me.sknz.ousubot.domain.dto.UserRequest
-import org.thymeleaf.spring5.SpringTemplateEngine
+import me.sknz.ousubot.domain.services.type.CachedService
+import me.sknz.ousubot.domain.services.type.OsuAPIService
 
 /**
  * ## UserService
@@ -14,10 +14,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine
  *
  * @see UserController
  */
-interface UserService<T>: CachedService<T> {
-
-    val client: OsuClientAPI
-    val engine: SpringTemplateEngine
+interface UserService<T: UserService<T>>: CachedService<T>, OsuAPIService {
 
     /**
      * Função para pegar/gerar uma mensagem prontas.
@@ -28,5 +25,5 @@ interface UserService<T>: CachedService<T> {
      *
      * @param request Uma requisição de beatmap ou beatmapSet
      */
-    fun getUserService(request: UserRequest): DiscordUserEmbed
+    fun getUserEmbed(request: UserRequest): DiscordUserEmbed
 }
