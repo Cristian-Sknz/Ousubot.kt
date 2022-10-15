@@ -7,10 +7,12 @@ import kotlin.reflect.KFunction
 
 class CustomSlashCommandData: CommandDataImpl, RunnableCommand {
 
+
     constructor(name: String, description: String = "no description"): super(name, description)
     constructor(type: Command.Type, name: String): super(type, name)
 
     override lateinit var function: CommandFunction
+    private val subcommands: ArrayList<SlashSubcommandData> = arrayListOf()
 
     fun addOptions(options: List<CustomOption>): CustomSlashCommandData {
         super.addOptions(options)
@@ -23,11 +25,29 @@ class CustomSlashCommandData: CommandDataImpl, RunnableCommand {
     }
 
     fun getSubcommand(name: String): SlashSubcommandData? {
-        return subcommands.find { it.name.equals(name, true) } as SlashSubcommandData?
+        return subcommands.find { it.name.equals(name, true) }
     }
 
     fun getOption(name: String): CustomOption? {
         return getOptions().find { it.name.equals(name, true) } as CustomOption?
+    }
+
+    override fun getSubcommands(): List<SubcommandData> = subcommands
+
+    fun addSubcommand(subcommand: SubcommandData): CommandDataImpl {
+        if (subcommand is SlashSubcommandData) {
+            super.addSubcommands(subcommand)
+            this.subcommands.add(subcommand)
+            return this
+        }
+        throw IllegalArgumentException("${subcommand.name} não é um ${SlashSubcommandData::class.simpleName}")
+    }
+
+    override fun addSubcommands(vararg subcommands: SubcommandData): CommandDataImpl {
+        for (subcommand in subcommands) {
+            addSubcommand(subcommand)
+        }
+        return this
     }
 
     class SlashSubcommandData(name: String, description: String)
