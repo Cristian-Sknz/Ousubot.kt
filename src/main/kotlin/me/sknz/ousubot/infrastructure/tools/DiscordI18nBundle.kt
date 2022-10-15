@@ -1,10 +1,11 @@
 package me.sknz.ousubot.infrastructure.tools
 
 import net.dv8tion.jda.api.interactions.DiscordLocale
+import net.dv8tion.jda.api.interactions.commands.CommandInteraction
 import net.dv8tion.jda.api.interactions.commands.localization.LocalizationFunction
+import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction
 import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.io.ClassPathResource
-import java.lang.IllegalArgumentException
 import java.nio.file.Files
 import java.util.*
 import kotlin.io.path.isDirectory
@@ -61,5 +62,9 @@ object DiscordI18nBundle : LocalizationFunction, ReloadableResourceBundleMessage
             }
             return@map name
         }.filterNotNull()
+    }
+
+    fun CommandInteraction.reply(code: String, locale: DiscordLocale): ReplyCallbackAction {
+        return this.reply(DiscordI18nBundle.getMessage(code, null, Locale.forLanguageTag(locale.locale)))
     }
 }

@@ -5,18 +5,19 @@ import me.sknz.ousubot.app.api.models.beatmaps.Beatmap
 import me.sknz.ousubot.app.api.models.beatmaps.BeatmapSet
 import me.sknz.ousubot.app.api.models.users.UserCompact
 import java.io.Serializable
+import java.text.DecimalFormat
 import java.time.OffsetDateTime
 
 class BeatmapScore : Serializable {
 
-    val id: Int = 0
+    val id:  Long  = 0
     @JsonProperty("best_id")
-    val bestId: Int = 0
+    val bestId: Long = 0
     @JsonProperty("user_id")
     val userId: Int = 0
     val accuracy: Double = Double.NaN
     val mods: Array<String> = emptyArray()
-    val score: Int = 0
+    val score: Long = 0
     val type: String = ""
     @JsonProperty("max_combo")
     val maxCombo: Int = 0
@@ -40,7 +41,7 @@ class BeatmapScore : Serializable {
 
     val passed: Boolean = false
     val pp: Double = Double.NaN
-    val rank: Int = 0
+    val rank: String =  ""
     @JsonProperty("created_at")
     val createdAt = OffsetDateTime.now()
     val mode: String = ""
@@ -48,7 +49,7 @@ class BeatmapScore : Serializable {
     val modeInt: Int = 0
     val replay: Boolean = false
 
-    val beatmap: Beatmap? = null
+    var beatmap: Beatmap? = null
     @JsonProperty("beatmapset")
     val beatmapSet: BeatmapSet? = null
 
@@ -59,4 +60,8 @@ class BeatmapScore : Serializable {
     val weight: Int? = null
     val user: UserCompact? = null
     val match: Any? = null
+
+    fun getAccuracy(): String {
+        return DecimalFormat("##.##").format(accuracy * 100)
+    }
 }

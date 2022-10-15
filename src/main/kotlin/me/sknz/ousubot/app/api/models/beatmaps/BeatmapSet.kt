@@ -53,6 +53,13 @@ class BeatmapSet: BeatmapSetCompact(), Serializable, Cloneable {
         return "https://osu.ppy.sh/beatmapsets/$id"
     }
 
+    operator fun get(beatmapId: Int): Beatmap? {
+        if (beatmaps.isNullOrEmpty()) {
+            throw NoSuchElementException("Não existe beatmaps neste BeatmapSet")
+        }
+        return beatmaps!!.find { it.id == beatmapId }
+    }
+
     public override fun clone(): Any {
         return super.clone()
     }

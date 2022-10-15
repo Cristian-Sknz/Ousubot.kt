@@ -1,0 +1,40 @@
+<DiscordEmbed xmlns:th="http://www.thymeleaf.org" xmlns:discord="http://www.thymeleaf.org">
+    <title th:inline="text">
+        <name>[[${beatmap.beatmapSet.title}]] - [[#{score.topscore}]]</name>
+        <url th:text="${beatmap.url}"/>
+        <icon/>
+    </title>
+    <description th:inline="text">:infinity: [[#{beatmap.version}]] [[${'[' + beatmap.version + ']'}]]([[${beatmap.url}]])
+        :headphones: Beatmap: [[${'[' + beatmap.beatmapSet.title + ']'}]]([[${beatmap.beatmapSet.getBeatmapSetUrl()}]])
+        <emoji discord:emoji="osu"/> [[#{score.pp}]]: [[${score.pp}]]pp
+        <emoji discord:emoji="empty"/> - [[#{score.accuracy}]]: [[${score.getAccuracy()}]]%
+        :small_blue_diamond: [[#{beatmap.maxcombo}]]: [[${beatmap.maxCombo}]]
+    </description>
+    <thumbnail th:inline="text">
+        https://a.ppy.sh/[[${score.user.id}]]
+    </thumbnail>
+    <image th:text="${beatmap.beatmapSet.covers.cover2x}"/>
+    <color th:text="${color}"/>
+    <fields th:inline="text">
+        <fields>
+            <label>[[#{score.total}]]</label>
+            <value>[[${score.score}]]</value>
+            <inline>true</inline>
+        </fields>
+        <fields>
+            <label>[[#{score.score}]]</label>
+            <value>[[${score.score}]]</value>
+            <inline>true</inline>
+        </fields>
+    </fields>
+    <author th:inline="text">
+        <name>[[${score.user.username}]]</name>
+        <url>https://osu.ppy.sh/users/[[${score.user.id}]]</url>
+        <icon>https://a.ppy.sh/[[${score.user.id}]]</icon>
+    </author>
+    <timestamp th:text="${score.createdAt}"/>
+    <footer>
+        <name>[[#{beatmap.createdby}]] [[${beatmap.beatmapSet.creator}]]</name>
+        <icon>https://a.ppy.sh/[[${beatmap.userId}]]</icon>
+    </footer>
+</DiscordEmbed>

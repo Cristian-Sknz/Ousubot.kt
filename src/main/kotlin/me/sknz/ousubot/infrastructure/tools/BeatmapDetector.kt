@@ -44,6 +44,7 @@ object BeatmapDetector {
             ?: detect(embed.description ?: "")
             ?: detect(embed.author?.url ?: "")
             ?: embed.fields.stream().map { detect(it.value ?: "") }
+                .filter { it != null }
                 .findFirst()
                 .orElse(null)
             ?: osuNotFound("Não há beatmap ou beatmapset nesta mensagem!")

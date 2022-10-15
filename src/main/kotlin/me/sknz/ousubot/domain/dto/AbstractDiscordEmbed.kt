@@ -14,12 +14,14 @@ import java.io.Serializable
  */
 abstract class AbstractDiscordEmbed<T>(
     val embed: DiscordEmbed,
-    val next: Int?,
-    val back: Int?,
+    val next: Long?,
+    val back: Long?,
     val payload: T
 ): Serializable {
 
-    constructor(embed: DiscordEmbed, payload: T): this(embed, null, null, payload)
+    constructor(embed: DiscordEmbed, payload: T): this(embed, null as  Long?, null as Long?, payload)
+    constructor(embed: DiscordEmbed, next: Int?, back: Int?, payload: T): this(embed, next?.toLong(), back?.toLong(), payload)
+
     fun hasNext(): Boolean = next != null
     fun hasBack(): Boolean = back != null
     fun toMessageEmbed(): MessageEmbed = embed.toMessageEmbed()

@@ -20,6 +20,11 @@
         <value-type>me.sknz.ousubot.app.api.models.beatmaps.BeatmapSet</value-type>
     </cache>
 
+    <cache alias="api:beatmapscore" uses-template="default">
+        <key-type>java.lang.Integer</key-type>
+        <value-type>me.sknz.ousubot.app.api.models.scores.BeatmapScores</value-type>
+    </cache>
+
     <cache alias="api:lockup" uses-template="default">
         <key-type>java.lang.Integer</key-type>
         <value-type>me.sknz.ousubot.app.api.models.beatmaps.BeatmapSet</value-type>
@@ -28,6 +33,11 @@
     <cache alias="api:searchmaps" uses-template="default">
         <key-type>java.lang.String</key-type>
         <value-type>me.sknz.ousubot.app.api.models.beatmaps.BeatmapSearch</value-type>
+    </cache>
+
+    <cache alias="embed:beatmapscore" uses-template="default">
+        <key-type>me.sknz.ousubot.domain.dto.ScoreRequest</key-type>
+        <value-type>me.sknz.ousubot.domain.dto.DiscordScoreEmbed</value-type>
     </cache>
     <cache alias="embed:searchmaps" uses-template="default">
         <key-type>me.sknz.ousubot.domain.dto.BeatmapSearchRequest</key-type>

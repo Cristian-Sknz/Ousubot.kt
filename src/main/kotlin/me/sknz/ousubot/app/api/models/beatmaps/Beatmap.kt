@@ -18,6 +18,9 @@ open class Beatmap : BeatmapCompact(), Serializable {
 
     @JsonProperty("beatmapset")
     var beatmapSet: BeatmapSet? = null
+        set(value) {
+            field = value?.cloneWithoutBeatmaps()
+        }
 
     @JsonProperty("is_scoreable")
     val scoreable: Boolean = false
