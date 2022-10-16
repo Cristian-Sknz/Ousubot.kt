@@ -6,6 +6,14 @@ import me.skiincraft.ousucanvas.elements.ElementContainer
 import me.skiincraft.ousucanvas.text.TextElement
 import java.awt.image.BufferedImage
 
+/**
+ * ##  KotlinImageBuilder
+ *
+ * Classe que adapta o [ImageBuilder] para ser utilizado
+ * com o DSL do Kotlin.
+ *
+ * @see ImageBuilder
+ */
 class KotlinImageBuilder(width: Int,
                          height: Int,
                          type: Int = BufferedImage.TYPE_INT_RGB

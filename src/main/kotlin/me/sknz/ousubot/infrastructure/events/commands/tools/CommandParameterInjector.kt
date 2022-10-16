@@ -12,8 +12,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction
 import org.springframework.beans.BeansException
 import org.springframework.context.ApplicationContext
+import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
@@ -54,11 +54,11 @@ class CommandParameterInjector(
      * Parâmetros inválidos sempre vão retornar 'null'.
      *
      * @param event Evento em que a função se encontra
-     * @param function Função em que os parâmetros serão injetados posteriormente
+     * @param callable Função em que os parâmetros serão injetados posteriormente
      */
     fun getInitializedParameters(event: GenericCommandInteractionEvent,
-                                 function: KFunction<*>): List<Any?> {
-        val parameters = function.parameters.toMutableList()
+                                 callable: KCallable<*>): List<Any?> {
+        val parameters = callable.parameters.toMutableList()
         parameters.removeFirst()
 
         val values = parameters.map { parameter ->

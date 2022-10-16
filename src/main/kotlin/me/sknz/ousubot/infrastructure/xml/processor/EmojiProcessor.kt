@@ -1,6 +1,7 @@
 package me.sknz.ousubot.infrastructure.xml.processor
 
 import me.sknz.ousubot.infrastructure.tools.CustomEmojis
+import me.sknz.ousubot.infrastructure.tools.CustomEmojis.xml
 import org.thymeleaf.IEngineConfiguration
 import org.thymeleaf.context.ITemplateContext
 import org.thymeleaf.engine.AttributeName
@@ -14,7 +15,6 @@ import org.thymeleaf.templatemode.TemplateMode
 
 class EmojiProcessor(
     prefix: String,
-    private val emojis: CustomEmojis
 ) : AbstractAttributeTagProcessor(
     TemplateMode.XML,
     prefix,
@@ -32,10 +32,7 @@ class EmojiProcessor(
         attributeValue: String,
         structureHandler: IElementTagStructureHandler
     ) {
-        val value = getEmoteName(context, attributeValue)
-        val emoji = value?.let {
-            emojis.getXMLEmoji(it)
-        }
+        val emoji = CustomEmojis[getEmoteName(context, attributeValue)]?.xml()
         val text = context.modelFactory.createText(emoji ?: "emote not found")
         structureHandler.replaceWith(text, false)
     }

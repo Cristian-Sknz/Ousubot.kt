@@ -18,7 +18,7 @@ import java.util.*
 
 @Service
 class BeatmapServiceImpl(override val client: OsuClientAPI,
-                         override val engine: SpringTemplateEngine, ): BeatmapService<BeatmapServiceImpl> {
+                         override val engine: SpringTemplateEngine): BeatmapService<BeatmapServiceImpl> {
 
     @Autowired
     @Lazy

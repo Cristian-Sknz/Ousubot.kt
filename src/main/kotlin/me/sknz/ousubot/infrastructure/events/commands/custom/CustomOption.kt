@@ -6,6 +6,12 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import org.springframework.context.ApplicationContext
 import kotlin.reflect.KClass
 
+/**
+ * ## CustomOption
+ *
+ * Classe que estende [OptionData] e adiciona o paramêtro [complete]
+ * para a utilização de [CommandAutoComplete].
+ */
 class CustomOption (
     option: OptionType,
     name: String,

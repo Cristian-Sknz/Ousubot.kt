@@ -6,28 +6,37 @@ import net.dv8tion.jda.api.entities.emoji.CustomEmoji
 import net.dv8tion.jda.api.entities.emoji.Emoji
 import org.springframework.core.io.ClassPathResource
 
+/**
+ * ## CustomEmojis
+ *
+ * Objeto que contém todos os [CustomEmoji]s em `classpath:assets/emoji.json`
+ * que poderão ficar disponíveis para o ser utilizados
+ *
+ * @see CustomEmoji
+ */
 @WorkInProgress
-class CustomEmojis {
+object CustomEmojis {
 
-    private val emoji: ArrayList<CustomEmoji> = arrayListOf()
+    private val emojis: List<CustomEmoji> = getAvailableEmojis()
 
-    init {
+    operator fun get(name: String?): CustomEmoji? {
+        return name?.let { value -> emojis.find { it.name.equals(value, true) } }
+    }
+
+    fun CustomEmoji.xml(): String {
+        return "&lt;:${this.name}:${this.id}&gt;"
+    }
+
+    private fun getAvailableEmojis(): List<CustomEmoji> {
         val path = ClassPathResource("assets/emoji.json", this.javaClass.classLoader)
-        if (path.exists()) {
-            val json = ObjectMapper().readTree(path.inputStream)
-            for (node in json) {
-                emoji.add(Emoji.fromCustom(node.get("name").asText(), node.get("id").asLong(), false))
-            }
+        if (!path.exists()) {
+            return emptyList()
         }
+        val json = ObjectMapper().readTree(path.inputStream)
+        return json.map { Emoji.fromCustom(it.get("name").asText(), it.get("id").asLong(), false) }
     }
 
-    fun getEmoji(name: String): CustomEmoji? {
-        return emoji.find { it.name.equals(name, true) }
-    }
-
-    fun getXMLEmoji(name: String): String? {
-        return getEmoji(name)?.let {
-            "&lt;:${it.name}:${it.id}&gt;"
-        }
+    override fun toString(): String {
+        return emojis.toString()
     }
 }

@@ -92,7 +92,7 @@ class SearchServiceImpl(override val client: OsuClientAPI,
 
             val beatmaps = beatmapSet.beatmaps!!
             val versions = beatmaps.stream()
-                .map { "${emojis.getEmoji(it.mode.name)?.asMention} ${it.version} (${it.difficultyRating})" }
+                .map { "${emojis[it.mode.name]?.asMention} ${it.version} (${it.difficultyRating})" }
                 .limit(5)
                 .collect(Collectors.toList())
 

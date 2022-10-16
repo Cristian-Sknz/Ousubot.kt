@@ -1,6 +1,7 @@
 package me.sknz.ousubot.infrastructure.events.commands
 
 import me.sknz.ousubot.infrastructure.annotations.commands.*
+import me.sknz.ousubot.infrastructure.events.InteractionFactory
 import me.sknz.ousubot.infrastructure.events.commands.autocomplete.CommandAutoComplete
 import me.sknz.ousubot.infrastructure.events.commands.autocomplete.NumberAutoComplete
 import me.sknz.ousubot.infrastructure.events.commands.autocomplete.StringAutoComplete
@@ -8,9 +9,13 @@ import me.sknz.ousubot.infrastructure.events.commands.custom.CustomOption
 import me.sknz.ousubot.infrastructure.events.commands.custom.CustomSlashCommandData
 import me.sknz.ousubot.infrastructure.events.commands.exception.CommandRegisterException
 import me.sknz.ousubot.infrastructure.tools.DiscordI18nBundle
-import me.sknz.ousubot.infrastructure.events.InteractionFactory
+import net.dv8tion.jda.api.entities.Message
+import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.interactions.commands.Command
 import net.dv8tion.jda.api.interactions.commands.OptionType
+import net.dv8tion.jda.api.interactions.commands.build.CommandData
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredFunctions
@@ -18,6 +23,15 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.isSubclassOf
 
+/**
+ * ## CommandFunctionFactory
+ *
+ * Classe responsável em gerar [SlashCommandData], [SubcommandData], [CommandData] para
+ * interações com [User] e [Message], e transformar estes dados em uma função que
+ * será executada pelo bot.
+ *
+ * @see SlashCommands
+ */
 class CommandFunctionFactory : InteractionFactory<CustomSlashCommandData> {
 
     override fun create(instance: Any, clazz: KClass<out Any>, vararg params: Any?): List<CustomSlashCommandData> {
@@ -83,8 +97,8 @@ class CommandFunctionFactory : InteractionFactory<CustomSlashCommandData> {
     }
 
     private fun getCommandOptions(function: KFunction<*>): List<CustomOption> {
-        val options = function.findAnnotation<SlashCommandOptions>()?.value
-            ?: arrayOf(function.findAnnotation<SlashCommandOption>() ?: return emptyList())
+        val options = function.findAnnotation<SlashCommand.Options>()?.value
+            ?: arrayOf(function.findAnnotation<SlashCommand.Option>() ?: return emptyList())
 
         return options.map { option ->
             if (option.isCommandAutoComplete()) {
@@ -99,7 +113,7 @@ class CommandFunctionFactory : InteractionFactory<CustomSlashCommandData> {
     /**
      * Verificar se a classe de auto-complete é valida.
      */
-    private fun SlashCommandOption.isCommandAutoComplete(): Boolean {
+    private fun SlashCommand.Option.isCommandAutoComplete(): Boolean {
         return when {
             this.autocomplete.isSubclassOf(CommandAutoComplete::class) -> {
                 when {

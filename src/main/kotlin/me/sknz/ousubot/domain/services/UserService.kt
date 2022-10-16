@@ -23,7 +23,7 @@ interface UserService<T: UserService<T>>: CachedService<T>, OsuAPIService {
      * para otimizar o processamento de uma requisição e evitar
      * requisições desnecessárias na API do Osu
      *
-     * @param request Uma requisição de beatmap ou beatmapSet
+     * @param request Uma requisição de usuario
      */
     fun getUserEmbed(request: UserRequest): DiscordUserEmbed
 }

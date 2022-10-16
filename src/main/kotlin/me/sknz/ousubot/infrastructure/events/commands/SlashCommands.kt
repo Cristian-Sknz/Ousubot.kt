@@ -3,8 +3,8 @@ package me.sknz.ousubot.infrastructure.events.commands
 import me.sknz.ousubot.infrastructure.annotations.commands.SlashCommandController
 import me.sknz.ousubot.infrastructure.events.commands.autocomplete.NumberAutoComplete
 import me.sknz.ousubot.infrastructure.events.commands.autocomplete.StringAutoComplete
+import me.sknz.ousubot.infrastructure.events.commands.custom.CallableCommand
 import me.sknz.ousubot.infrastructure.events.commands.custom.CustomSlashCommandData
-import me.sknz.ousubot.infrastructure.events.commands.custom.RunnableCommand
 import me.sknz.ousubot.infrastructure.events.commands.tools.CommandParameterInjector
 import me.sknz.ousubot.infrastructure.exceptions.AbstractExceptionHandler
 import net.dv8tion.jda.api.JDA
@@ -44,18 +44,18 @@ internal class SlashCommands(
             return
         }
 
-        val command: RunnableCommand? = event.subcommandName.let {
+        val command: CallableCommand? = event.subcommandName.let {
             val cmd = this.commands[event.name.lowercase()]!!
             if (it != null) {
-                return@let cmd.getSubcommand(it)
+                return@let cmd.getSubcommand(it)?.function
             }
-            return@let cmd
+            return@let cmd.function
         }
 
         try {
             command?.let { runnable ->
                 logger.info("Executando um comando '${event.commandPath}': ${event.options.map {"${it.name}=${it.asString}"}}")
-                val params = injector.getInitializedParameters(event, command.function.function)
+                val params = injector.getInitializedParameters(event, command)
                 val callback = runnable.call(*params.toTypedArray())
                 if (callback is RestAction<*>) callback.queue()
             }
@@ -92,11 +92,11 @@ internal class SlashCommands(
 
     @SubscribeEvent
     fun messageInteraction(event: MessageContextInteractionEvent) {
-        val command = this.commands[event.name.lowercase()] ?: return
+        val command = this.commands[event.name.lowercase()]?.function ?: return
 
         try {
             command.let {
-                val params = injector.getInitializedParameters(event, command.function.function)
+                val params = injector.getInitializedParameters(event, command)
                 val callback = it.call(*params.toTypedArray())
                 if (callback is RestAction<*>) callback.queue()
             }

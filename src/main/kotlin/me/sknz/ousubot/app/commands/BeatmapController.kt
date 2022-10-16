@@ -9,6 +9,8 @@ import me.sknz.ousubot.domain.services.BeatmapService
 import me.sknz.ousubot.domain.services.SearchService
 import me.sknz.ousubot.infrastructure.annotations.WorkInProgress
 import me.sknz.ousubot.infrastructure.annotations.commands.*
+import me.sknz.ousubot.infrastructure.annotations.commands.SlashCommand.Option
+import me.sknz.ousubot.infrastructure.annotations.commands.SlashCommand.Options
 import me.sknz.ousubot.infrastructure.tools.BeatmapDetector
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.emoji.Emoji
@@ -33,7 +35,7 @@ class BeatmapController(
 
     @SlashCommand(name = "beatmapset", description = "Get information from a set of beatmaps")
     @MessageInteraction("View Beatmap from Message")
-    @SlashCommandOption(name = "name", description = "BeatmapSet name or ID", required = true)
+    @Option(name = "name", description = "BeatmapSet name or ID", required = true)
     fun getBeatmapSet(interaction: CommandInteraction,
                       @OptionParam("name") name: OptionMapping?): RestAction<*> {
         if (interaction is MessageContextInteractionEvent) {
@@ -52,7 +54,7 @@ class BeatmapController(
     }
 
     @SlashCommand(name = "beatmap", description = "Get information from a beatmaps")
-    @SlashCommandOption(name = "name", description = "Beatmap name or ID", required = true)
+    @Option(name = "name", description = "Beatmap name or ID", required = true)
     fun getBeatmap(interaction: SlashCommandInteraction,
                    @OptionParam("name") name: OptionMapping): RestAction<*> {
         if (name.asString.toLongOrNull() != null) {
@@ -67,8 +69,8 @@ class BeatmapController(
 
 
     @SlashCommand(name = "search", description = "Search beatmap sets")
-    @SlashCommandOptions([
-        SlashCommandOption(
+    @Options([
+        Option(
             name = "query",
             description = "Beatmapset name",
             required = true

@@ -42,7 +42,7 @@ class TemplateEngineConfiguration {
 
     @Bean
     fun customEmojis(): CustomEmojis {
-        return CustomEmojis()
+        return CustomEmojis
     }
 
     @Bean
@@ -57,7 +57,7 @@ class TemplateEngineConfiguration {
         val engine = SpringTemplateEngine()
         engine.setTemplateResolver(resolver)
         engine.addDialect(Java8TimeDialect())
-        engine.addDialect(DiscordDialect(customEmojis()))
+        engine.addDialect(DiscordDialect())
         engine.setTemplateEngineMessageSource(messageSource)
 
         return engine

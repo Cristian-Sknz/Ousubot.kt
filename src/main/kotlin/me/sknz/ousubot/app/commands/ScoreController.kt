@@ -5,6 +5,7 @@ import me.sknz.ousubot.domain.dto.DiscordScoreEmbed
 import me.sknz.ousubot.domain.dto.ScoreRequest
 import me.sknz.ousubot.domain.services.ScoreService
 import me.sknz.ousubot.infrastructure.annotations.commands.*
+import me.sknz.ousubot.infrastructure.annotations.commands.SlashCommand.Option
 import me.sknz.ousubot.infrastructure.tools.BeatmapDetector
 import me.sknz.ousubot.infrastructure.tools.DiscordI18nBundle.reply
 import net.dv8tion.jda.api.entities.emoji.Emoji
@@ -22,7 +23,7 @@ class ScoreController(
 ) {
 
     @SlashCommand(name="beatmap", description="Get a Beatmap Top Scores")
-    @SlashCommandOption(OptionType.INTEGER, name = "id", description = "Beatmap Id", required = true)
+    @Option(OptionType.INTEGER, name = "id", description = "Beatmap Id", required = true)
     @MessageInteraction("View Beatmap Top Scores")
     fun beatmapScore(interaction: CommandInteraction, @OptionParam("id") id: OptionMapping?): RestAction<*> {
         if (interaction is MessageContextInteractionEvent) {

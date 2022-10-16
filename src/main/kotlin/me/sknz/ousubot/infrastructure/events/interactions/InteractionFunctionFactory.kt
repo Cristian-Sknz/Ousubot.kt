@@ -4,12 +4,23 @@ import me.sknz.ousubot.infrastructure.annotations.interaction.InteractionControl
 import me.sknz.ousubot.infrastructure.annotations.interaction.InteractionHandler
 import me.sknz.ousubot.infrastructure.events.InteractionFactory
 import me.sknz.ousubot.infrastructure.events.interactions.exception.InteractionRegisterException
+import net.dv8tion.jda.api.interactions.components.Modal
+import net.dv8tion.jda.api.interactions.components.buttons.Button
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 
+/**
+ * ## InteractionFunctionFactory
+ *
+ * Classe responsável em gerar [LinkedInteraction] para
+ * interações com [Modal] e [Button] transformando-os em uma função que
+ * será executada pelo bot.
+ *
+ * @see AbstractInteraction
+ */
 class InteractionFunctionFactory : InteractionFactory<LinkedInteraction> {
 
     override fun create(instance: Any, clazz: KClass<out Any>, vararg params: Any?): List<LinkedInteraction> {
