@@ -3,6 +3,7 @@ package me.sknz.ousubot.app.api.models.enums
 import com.fasterxml.jackson.annotation.JsonProperty
 
 enum class GameMode(val id: Int, val mode: String) {
+
     @JsonProperty("fruits")
     Fruits(3,"osu!catch"),
     @JsonProperty("mania")
@@ -16,4 +17,7 @@ enum class GameMode(val id: Int, val mode: String) {
         return this.name
     }
 
+    companion object {
+        fun of(mode: String?) = GameMode.values().find { it.mode.equals(mode, true) }
+    }
 }

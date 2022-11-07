@@ -51,17 +51,22 @@ class BeatmapScore : Serializable {
 
     var beatmap: Beatmap? = null
     @JsonProperty("beatmapset")
-    val beatmapSet: BeatmapSet? = null
+    var beatmapSet: BeatmapSet? = null
 
     @JsonProperty("rank_country")
     val rankCountry: Int? = null
     @JsonProperty("rank_global")
     val rankGlobal: Int? = null
-    val weight: Int? = null
+    val weight: ScoreWeight? = null
     val user: UserCompact? = null
     val match: Any? = null
 
     fun getAccuracy(): String {
         return DecimalFormat("##.##").format(accuracy * 100)
+    }
+
+    class ScoreWeight: Serializable {
+        val pp: Double = Double.NaN
+        val percentage: Double = Double.NaN
     }
 }

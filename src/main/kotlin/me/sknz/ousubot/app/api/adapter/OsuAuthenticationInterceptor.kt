@@ -36,9 +36,26 @@ class OsuAuthenticationInterceptor(
 
         if (auth.expireDate?.isAfter(OffsetDateTime.now()) == true) {
             template.header("Authorization", "Bearer ${auth.accessToken}")
+            template.decodeVariables()
             return
         }
 
         throw RuntimeException("Código de acesso está expirado ou invalido!")
+    }
+
+    /**
+     * Substituir os caracteres de paramêtros que estão
+     * codificados (encoded) pelos caracteres corretos.
+     *
+     * de ``myurl.com/%3Fname%3Dmyname``
+     * para ``myurl.com/?name=myname``
+     */
+    private fun RequestTemplate.decodeVariables() {
+        val url = this.request().url()
+            .replace("%3F", "?")
+            .replace("%26", "&")
+            .replace("%3D", "=")
+
+        this.uri(url)
     }
 }

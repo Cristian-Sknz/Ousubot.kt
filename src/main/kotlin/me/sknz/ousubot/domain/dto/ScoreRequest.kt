@@ -6,7 +6,7 @@ import java.util.Locale
 
 data class ScoreRequest(
     val beatmap: Int,
-    val score: Long?,
+    var score: Long?,
     val locale: Locale
 ) : Serializable {
     constructor(beatmap: Int, score: Long?, locale: DiscordLocale) : this(beatmap, score, Locale.forLanguageTag(locale.locale))

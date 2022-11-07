@@ -47,6 +47,7 @@ class OsuTokenScheduler(
             val response = call.execute()
             if (response.isSuccessful) {
                 repository.save(tokenClient.getAccessToken(response))
+                this.schedule()
                 return@Runnable
             }
             repository.deleteById(1)

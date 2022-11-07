@@ -101,12 +101,14 @@ class CommandFunctionFactory : InteractionFactory<CustomSlashCommandData> {
             ?: arrayOf(function.findAnnotation<SlashCommand.Option>() ?: return emptyList())
 
         return options.map { option ->
-            if (option.isCommandAutoComplete()) {
+            if (option.choices.isEmpty() && option.isCommandAutoComplete()) {
                 return@map CustomOption(option.type, option.name, option.description,
                     option.autocomplete, option.required)
             }
+
             return@map CustomOption(option.type, option.name, option.description,
                 null, option.required)
+                .setChoices(*option.choices)
         }
     }
 

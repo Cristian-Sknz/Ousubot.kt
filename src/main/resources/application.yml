@@ -1,6 +1,4 @@
 spring:
-  main:
-    banner-mode: "off"
   cache:
     jcache:
       config: classpath:ehcache.xml

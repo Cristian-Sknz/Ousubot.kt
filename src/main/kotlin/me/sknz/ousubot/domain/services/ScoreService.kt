@@ -2,7 +2,9 @@ package me.sknz.ousubot.domain.services
 
 import me.sknz.ousubot.app.commands.ScoreController
 import me.sknz.ousubot.domain.dto.DiscordScoreEmbed
+import me.sknz.ousubot.domain.dto.DiscordUserScoreEmbed
 import me.sknz.ousubot.domain.dto.ScoreRequest
+import me.sknz.ousubot.domain.dto.UserScoreRequest
 import me.sknz.ousubot.domain.services.type.CachedService
 import me.sknz.ousubot.domain.services.type.OsuAPIService
 
@@ -26,4 +28,6 @@ interface ScoreService<T: ScoreService<T>>: CachedService<T>, OsuAPIService {
      * @param request Uma requisição de score
      */
     fun getBeatmapScoreEmbed(request: ScoreRequest): DiscordScoreEmbed
+
+    fun getUserScoreEmbed(request: UserScoreRequest): DiscordUserScoreEmbed
 }

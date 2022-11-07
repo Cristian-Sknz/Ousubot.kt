@@ -43,11 +43,19 @@ annotation class SlashCommand(val name: String,
         val name: String,
         val description: String,
         val required: Boolean = false,
+        val choices: Array<Choice> = [],
         /**
          *  WARNING: O parametro autocomplete só aceita classes que estendem a [CommandAutoComplete]
          */
         val autocomplete: KClass<out CommandAutoComplete<*>> = CommandAutoComplete::class
-    )
+    ) {
+        @Retention(AnnotationRetention.RUNTIME)
+        @Target(AnnotationTarget.FUNCTION)
+        annotation class Choice(
+            val name: String,
+            val value: String
+        )
+    }
 
     /**
      * Anotação utilizada para especificar opções de um comando ou subcomando

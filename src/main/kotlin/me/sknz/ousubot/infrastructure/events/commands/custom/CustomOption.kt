@@ -1,6 +1,8 @@
 package me.sknz.ousubot.infrastructure.events.commands.custom
 
+import me.sknz.ousubot.infrastructure.annotations.commands.SlashCommand
 import me.sknz.ousubot.infrastructure.events.commands.autocomplete.CommandAutoComplete
+import net.dv8tion.jda.api.interactions.commands.Command
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.OptionData
 import org.springframework.context.ApplicationContext
@@ -19,6 +21,11 @@ class CustomOption (
     private val complete: KClass<out CommandAutoComplete<*>>? = null,
     required: Boolean = false
 ) : OptionData(option, name, description, required, complete != null) {
+
+    fun setChoices(vararg choice: SlashCommand.Option.Choice): CustomOption {
+        this.addChoices(choice.map { Command.Choice(it.name, it.value) })
+        return this
+    }
 
     fun getAutoComplete(context: ApplicationContext): CommandAutoComplete<*>? {
         complete?.let {

@@ -96,6 +96,7 @@ internal class SlashCommands(
 
         try {
             command.let {
+                logger.info("Executando um comando '${event.commandPath}': MessageInteraction")
                 val params = injector.getInitializedParameters(event, command)
                 val callback = it.call(*params.toTypedArray())
                 if (callback is RestAction<*>) callback.queue()
